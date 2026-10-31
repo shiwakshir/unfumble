@@ -121,9 +121,10 @@
           <!-- Large Natural Language Input Box -->
           <div class="mt-8 bg-white p-2 sm:p-2.5 rounded-2xl border border-slate-200 shadow-sm focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/20 transition-all text-left">
             <div class="flex items-center gap-2">
-              <input type="text" id="home-nlp-input" placeholder="Describe what you need, e.g. Merge three PDFs and make smaller than 5 MB..." class="flex-1 min-w-0 pl-3.5 pr-2 py-2 text-sm sm:text-base text-slate-800 placeholder-slate-400 focus:outline-none bg-transparent" />
-              <button id="home-btn-build" class="btn btn-primary flex-shrink-0 px-5 sm:px-6 py-2.5 text-sm font-semibold rounded-xl flex items-center justify-center gap-1.5 shadow-xs">
-                <span>Build My Tool</span>
+              <input type="text" id="home-nlp-input" placeholder="Describe what you need..." class="flex-1 min-w-0 pl-3.5 pr-2 py-2 text-sm sm:text-base text-slate-800 placeholder-slate-400 focus:outline-none bg-transparent" />
+              <button id="home-btn-build" class="btn btn-primary flex-shrink-0 px-3.5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl flex items-center justify-center gap-1.5 shadow-xs">
+                <span class="hidden sm:inline">Build My Tool</span>
+                <span class="sm:hidden">Build</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
               </button>
             </div>
@@ -1116,6 +1117,6 @@
   </div>
 
   <!-- Main Application Script (ES Module with cache-busting) -->
-  <script type="module" src="js/app.js?v=8"></script>
+  <script type="module" src="js/app.js?v=9"></script>
 </body>
 </html>

@@ -354,6 +354,18 @@ function initHomepage() {
     });
   }
 
+  // Responsive Placeholder: Crisp on mobile, descriptive on desktop
+  const updatePlaceholder = () => {
+    if (!homeInput) return;
+    if (window.innerWidth < 640) {
+      homeInput.placeholder = "Describe what you need...";
+    } else {
+      homeInput.placeholder = "Describe what you need, e.g. Merge three PDFs and make smaller than 5 MB...";
+    }
+  };
+  updatePlaceholder();
+  window.addEventListener('resize', updatePlaceholder);
+
   // Suggestion Pills
   document.querySelectorAll('.nlp-suggestion-pill').forEach(pill => {
     pill.addEventListener('click', () => {
