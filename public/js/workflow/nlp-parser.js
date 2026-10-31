@@ -50,13 +50,59 @@ export function parseLocally(prompt, existingWorkflow = null) {
   let targetWidth = dimMatch ? parseInt(dimMatch[1], 10) : (configurableFields.width || 800);
   let targetHeight = dimMatch ? parseInt(dimMatch[2], 10) : (configurableFields.height || 600);
 
-  // --- Max file size extraction: 200 KB, 5 MB, smaller than 2MB ---
-  const sizeMatch = prompt.match(/(?:smaller\s+than|below|under|max|maximum)?\s*(\d+(?:\.\d+)?)\s*(kb|mb)/i);
+  // --- Max file size extraction: 200 KB, 5 MB, smaller than 2MB, make it 1kb 2kb ---
+  const sizeMatch = prompt.match(/(?:smaller\s+than|below|under|max|maximum|make\s+it|to)?\s*(\d+(?:\.\d+)?)\s*(kb|mb)/i);
   let maxSizeKB = null;
   if (sizeMatch) {
     const val = parseFloat(sizeMatch[1]);
     const unit = sizeMatch[2].toLowerCase();
     maxSizeKB = unit === 'mb' ? Math.round(val * 1024) : Math.round(val);
+  }
+
+  // --- Compression / File Size Intent Detection ---
+  const isCompressRequested = Boolean(
+    maxSizeKB !== null ||
+    p.includes('compress') ||
+    p.includes('file size') ||
+    p.includes('filesize') ||
+    p.includes('make smaller') ||
+    p.includes('smaller than') ||
+    p.includes('reduce size') ||
+    p.includes('reduce file') ||
+    p.includes('shrink') ||
+    p.includes('decrease size') ||
+    p.includes('lower size') ||
+    p.includes('cut size') ||
+    /\b\d+\s*(kb|mb)\b/i.test(prompt)
+  );
+
+  if (isCompressRequested && !maxSizeKB) {
+    maxSizeKB = configurableFields.maxSizeKB || 100; // sensible default 100 KB
+  }
+
+  // --- Dimension / Pixel Resize Intent Detection ---
+  let isResizeRequested = Boolean(
+    dimMatch !== null ||
+    p.includes('pixel') ||
+    p.includes('pixels') ||
+    p.includes('px') ||
+    p.includes('dimension') ||
+    p.includes('resolution') ||
+    p.includes('width') ||
+    p.includes('height') ||
+    p.includes('pad') ||
+    p.includes('padding') ||
+    p.includes('crop') ||
+    p.includes('fill') ||
+    p.includes('aspect') ||
+    (p.includes('resize') && !p.includes('file size') && !p.includes('size of') && !p.includes('filesize')) ||
+    (configurableFields.width && configurableFields.height)
+  );
+
+  // If user only asked for compression, format conversion, or rename, do NOT force pixel resize
+  if (!isResizeRequested && !isCompressRequested && !targetImageFormat && !renamePattern) {
+    // Default fallback when prompt is just generic "process image"
+    isResizeRequested = true;
   }
 
   // --- Resizing mode extraction: pad, white padding, fit, crop/fill ---
@@ -105,26 +151,56 @@ export function parseLocally(prompt, existingWorkflow = null) {
 
   if (isImageTask && !isPdfTask) {
     inputTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp'];
-    title = 'Custom Image Processor';
-    description = `Processes images with ${resizeMode} resize (${targetWidth}×${targetHeight}), format conversion, compression, and automated renaming.`;
 
-    // 1. Resize step
-    const resizeStepIdx = operations.findIndex(op => op.operationId === 'resize_image');
-    const resizeParams = {
-      width: targetWidth,
-      height: targetHeight,
-      mode: resizeMode,
-      padColor: padColor
-    };
-    if (resizeStepIdx >= 0) {
-      operations[resizeStepIdx].params = { ...operations[resizeStepIdx].params, ...resizeParams };
+    // Contextual, human-friendly title & description
+    if (isCompressRequested && !isResizeRequested) {
+      title = targetImageFormat === 'image/jpeg' ? 'JPEG File Size Compressor' : 'Image File Size Compressor';
+      description = `Compresses image file size to under ${maxSizeKB} KB while preserving original pixel dimensions.`;
+    } else if (isResizeRequested && !isCompressRequested) {
+      title = 'Image Dimension Resizer';
+      description = `Resizes images to ${targetWidth}×${targetHeight} using ${resizeMode} mode.`;
+    } else if (isResizeRequested && isCompressRequested) {
+      title = 'Custom Image Processor';
+      description = `Processes images with ${resizeMode} resize (${targetWidth}×${targetHeight}), format conversion, compression, and automated renaming.`;
+    } else if (targetImageFormat) {
+      title = 'Image Format Converter';
+      description = `Converts images to ${targetImageFormat.replace('image/', '').toUpperCase()} format.`;
     } else {
-      operations.push({
-        stepId: 'step_resize',
-        operationId: 'resize_image',
-        name: 'Resize Image',
-        params: resizeParams
-      });
+      title = 'Custom Image Processor';
+      description = 'Custom image processing pipeline.';
+    }
+
+    // 1. Resize step (ONLY if pixel resize was requested)
+    if (isResizeRequested) {
+      const resizeStepIdx = operations.findIndex(op => op.operationId === 'resize_image');
+      const resizeParams = {
+        width: targetWidth,
+        height: targetHeight,
+        mode: resizeMode,
+        padColor: padColor
+      };
+      if (resizeStepIdx >= 0) {
+        operations[resizeStepIdx].params = { ...operations[resizeStepIdx].params, ...resizeParams };
+      } else {
+        operations.push({
+          stepId: 'step_resize',
+          operationId: 'resize_image',
+          name: 'Resize Image Dimensions',
+          params: resizeParams
+        });
+      }
+      configurableFields.width = targetWidth;
+      configurableFields.height = targetHeight;
+      configurableFields.resizeMode = resizeMode;
+      configurableFields.padColor = padColor;
+    } else {
+      // Remove any leftover resize step and do not show dimension controls
+      const existingResizeIdx = operations.findIndex(op => op.operationId === 'resize_image');
+      if (existingResizeIdx >= 0) operations.splice(existingResizeIdx, 1);
+      delete configurableFields.width;
+      delete configurableFields.height;
+      delete configurableFields.resizeMode;
+      delete configurableFields.padColor;
     }
 
     // 2. Format conversion step
@@ -141,22 +217,24 @@ export function parseLocally(prompt, existingWorkflow = null) {
           params: convertParams
         });
       }
+      configurableFields.format = targetImageFormat;
     }
 
-    // 3. Compression step
-    if (maxSizeKB || p.includes('compress') || p.includes('smaller than')) {
+    // 3. Compression step (KB file size reduction)
+    if (isCompressRequested) {
       const compStepIdx = operations.findIndex(op => op.operationId === 'compress_image');
-      const compParams = { maxSizeKB: maxSizeKB || 200, format: targetImageFormat || 'image/jpeg' };
+      const compParams = { maxSizeKB: maxSizeKB || 100, format: targetImageFormat || 'image/jpeg' };
       if (compStepIdx >= 0) {
         operations[compStepIdx].params = { ...operations[compStepIdx].params, ...compParams };
       } else {
         operations.push({
           stepId: 'step_compress',
           operationId: 'compress_image',
-          name: 'Compress Under Limit',
+          name: 'Compress File Size (KB)',
           params: compParams
         });
       }
+      configurableFields.maxSizeKB = maxSizeKB || 100;
     }
 
     // 4. Rename step
@@ -178,15 +256,8 @@ export function parseLocally(prompt, existingWorkflow = null) {
           params: renameParams
         });
       }
+      configurableFields.renamePattern = renamePattern || 'Photo_{n}';
     }
-
-    configurableFields.width = targetWidth;
-    configurableFields.height = targetHeight;
-    configurableFields.resizeMode = resizeMode;
-    configurableFields.padColor = padColor;
-    if (targetImageFormat) configurableFields.format = targetImageFormat;
-    if (maxSizeKB) configurableFields.maxSizeKB = maxSizeKB;
-    if (renamePattern) configurableFields.renamePattern = renamePattern;
 
   } else if (isPdfTask) {
     inputTypes = ['application/pdf'];

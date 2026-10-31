@@ -359,6 +359,25 @@ async function runAllTests() {
     assert(false, `Acceptance scenario 2 threw error: ${err.message}`);
   }
 
+  // --- TEST 15B: File Size (KB) vs Dimension (Pixels) NLP Disambiguation ---
+  try {
+    const compOnlyPrompt = 'Reduce file size of my jpeg';
+    const compWorkflow = parseLocally(compOnlyPrompt);
+    assert(compWorkflow.title.includes('Compressor'), `Title is "${compWorkflow.title}"`);
+    assert(compWorkflow.operations.some(op => op.operationId === 'compress_image'), 'Includes compress_image operation');
+    assert(!compWorkflow.operations.some(op => op.operationId === 'resize_image'), 'Does NOT include resize_image when only file size was requested');
+    assert(compWorkflow.configurableFields.maxSizeKB !== undefined, 'Exposes Max File Size (KB) control');
+    assert(compWorkflow.configurableFields.width === undefined, 'Does NOT expose pixel width control');
+
+    const tinyKbPrompt = 'make it 1kb 2kb etc';
+    const tinyKbWorkflow = parseLocally(tinyKbPrompt);
+    assert(tinyKbWorkflow.operations.some(op => op.operationId === 'compress_image'), 'make it 1kb parsed as compression');
+    assert(!tinyKbWorkflow.operations.some(op => op.operationId === 'resize_image'), 'make it 1kb does NOT force resize');
+    assert(tinyKbWorkflow.configurableFields.maxSizeKB === 1, `maxSizeKB parsed as 1, got ${tinyKbWorkflow.configurableFields.maxSizeKB}`);
+  } catch (err) {
+    assert(false, `Disambiguation test threw error: ${err.message}`);
+  }
+
   // --- TEST 16: Error handling & security safeguards ---
   console.log(`\n[Suite 5] Security & Safeguards:`);
   try {

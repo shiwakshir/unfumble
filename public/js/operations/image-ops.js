@@ -280,8 +280,8 @@ export async function convertImage(input, options = {}) {
  * Uses iterative binary search over JPEG/WebP quality.
  */
 export async function compressImage(input, options = {}) {
-  // Safety guardrail: Clamp minimum target size to 5 KB to prevent infinite loops
-  const maxSizeBytes = Math.max(5 * 1024, (options.maxSizeKB || 200) * 1024);
+  // Safety guardrail: Minimum target size 1 KB
+  const maxSizeBytes = Math.max(1 * 1024, (options.maxSizeKB || 100) * 1024);
   let targetFormat = options.format || 'image/jpeg';
 
   if (isNode) {
@@ -337,6 +337,31 @@ export async function compressImage(input, options = {}) {
       low = mid + 0.05;
     } else {
       high = mid - 0.05;
+    }
+  }
+
+  // If lowest quality is still above target byte limit, scale dimensions progressively to reach target KB
+  if (!bestBlob || bestBlob.size > maxSizeBytes) {
+    let scale = 0.8;
+    while (scale >= 0.1) {
+      const sw = Math.max(1, Math.round(img.width * scale));
+      const sh = Math.max(1, Math.round(img.height * scale));
+      const scaledCanvas = typeof OffscreenCanvas !== 'undefined'
+        ? new OffscreenCanvas(sw, sh)
+        : document.createElement('canvas');
+      scaledCanvas.width = sw;
+      scaledCanvas.height = sh;
+      const sCtx = scaledCanvas.getContext('2d');
+      sCtx.fillStyle = '#FFFFFF';
+      sCtx.fillRect(0, 0, sw, sh);
+      sCtx.drawImage(img, 0, 0, sw, sh);
+
+      const scaledBlob = await canvasToBlob(scaledCanvas, targetFormat, 0.70);
+      if (scaledBlob.size <= maxSizeBytes) {
+        bestBlob = scaledBlob;
+        break;
+      }
+      scale -= 0.15;
     }
   }
 
