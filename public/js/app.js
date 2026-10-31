@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMyToolsView();
   initSettingsModal();
   initFeedbackModal();
+  initPrivacyModal();
   initPwa();
   handleDeepLink();
 
@@ -2169,6 +2170,35 @@ function initFeedbackModal() {
         form.classList.add('hidden');
         if (successState) successState.classList.remove('hidden');
       });
+    });
+  }
+}
+
+// ================= PRIVACY & TERMS MODAL =================
+function initPrivacyModal() {
+  const modal = document.getElementById('privacy-modal');
+  const footerBtn = document.getElementById('footer-privacy-link');
+  const btnClose = document.getElementById('btn-close-privacy');
+  const btnOk = document.getElementById('btn-privacy-ok');
+
+  function openModal() {
+    if (modal) modal.classList.add('active');
+  }
+
+  function closeModal() {
+    if (modal) modal.classList.remove('active');
+  }
+
+  window.openPrivacyModal = openModal;
+  window.closePrivacyModal = closeModal;
+
+  if (footerBtn) footerBtn.addEventListener('click', openModal);
+  if (btnClose) btnClose.addEventListener('click', closeModal);
+  if (btnOk) btnOk.addEventListener('click', closeModal);
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
     });
   }
 }

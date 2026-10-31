@@ -919,6 +919,11 @@
       <div class="flex items-center gap-4 text-xs text-slate-400">
         <span>Processed locally in browser</span>
         <span>&bull;</span>
+        <button id="footer-privacy-link" onclick="window.openPrivacyModal &amp;&amp; window.openPrivacyModal()" class="text-slate-500 hover:text-slate-800 transition-colors inline-flex items-center gap-1">
+          <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Privacy & Terms
+        </button>
+        <span>&bull;</span>
         <button id="footer-feedback-link" onclick="window.openFeedbackModal &amp;&amp; window.openFeedbackModal()" class="text-slate-500 hover:text-slate-800 transition-colors inline-flex items-center gap-1">
           <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
           Feedback & Bugs
@@ -931,6 +936,67 @@
       </div>
     </div>
   </footer>
+
+  <!-- ================= PRIVACY & TERMS MODAL ================= -->
+  <div class="modal-overlay" id="privacy-modal">
+    <div class="modal-content space-y-4 max-w-lg">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Privacy Policy & Terms of Use</h3>
+            <p class="text-[11px] text-slate-500">Zero data retention guarantee and terms of service</p>
+          </div>
+        </div>
+        <button id="btn-close-privacy" class="text-slate-400 hover:text-slate-600 p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs text-slate-600 max-h-[60vh] overflow-y-auto pr-1">
+        <div class="p-3 bg-teal-50/70 rounded-xl border border-teal-200/60 text-teal-900">
+          <span class="font-bold">🛡️ Zero Data Retention Guarantee:</span>
+          <p class="text-[11px] text-teal-800 mt-1 leading-relaxed">
+            Unfumble operates 100% inside your web browser. All PDF merges, rotations, image compressions, and file conversions execute locally on your device using client-side WebAssembly and HTML5 Canvas. Your sensitive files, documents, and photos are <strong>never</strong> transmitted to any server, remote database, or third-party AI.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 mb-0.5">1. Complete File Ownership</h4>
+          <p class="leading-relaxed text-slate-500">
+            You retain 100% copyright, ownership, and full rights to all files processed on this site. Unfumble does not inspect, copy, monetize, or retain your files.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 mb-0.5">2. "As-Is" Software Disclaimer</h4>
+          <p class="leading-relaxed text-slate-500">
+            Unfumble is provided on an "as is" and "as available" basis without warranty of any kind, express or implied. While tools are built with safety guardrails and strict validation, the software is used at your own discretion.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 mb-0.5">3. Limitation of Liability</h4>
+          <p class="leading-relaxed text-slate-500">
+            In no event shall the authors, maintainers, or creators of Unfumble be liable for any direct, indirect, incidental, or consequential damages (including loss of data or submission deadline disputes) arising out of the use of this free tool. Users are encouraged to retain original backup copies of files before processing.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 mb-0.5">4. Third-Party Trademarks</h4>
+          <p class="leading-relaxed text-slate-500">
+            All brand, product, portal, and standard format names referenced (such as Adobe, PDF, or application portals) are trademarks of their respective owners. Mention of them is purely descriptive and does not imply sponsorship or endorsement.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-3 border-t border-slate-100">
+        <button type="button" id="btn-privacy-ok" class="btn btn-primary text-xs px-5 py-2">Got it</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ================= SETTINGS MODAL ================= -->
   <div class="modal-overlay" id="settings-modal">
@@ -1040,6 +1106,6 @@
   </div>
 
   <!-- Main Application Script (ES Module with cache-busting) -->
-  <script type="module" src="js/app.js?v=6"></script>
+  <script type="module" src="js/app.js?v=7"></script>
 </body>
 </html>
