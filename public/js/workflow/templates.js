@@ -5,6 +5,26 @@
 
 export const WORKFLOW_TEMPLATES = [
   {
+    id: 'template_reduce_jpeg_filesize',
+    title: 'Reduce File Size of Images (KB)',
+    badge: 'File Weight Reducer',
+    description: 'Compresses JPEG, PNG, and WebP images down to your exact target file size (e.g. 100 KB, 50 KB, or 10 KB) without altering pixel dimensions.',
+    inputTypes: ['image/jpeg', 'image/png', 'image/webp'],
+    multiple: true,
+    operations: [
+      {
+        stepId: 'step_compress',
+        operationId: 'compress_image',
+        name: 'Compress File Size (KB)',
+        params: { maxSizeKB: 100, format: 'image/jpeg' }
+      }
+    ],
+    configurableFields: {
+      maxSizeKB: 100,
+      format: 'image/jpeg'
+    }
+  },
+  {
     id: 'template_resize_rename_images',
     title: 'Resize and Rename 100 Images',
     badge: 'Popular Image Tool',

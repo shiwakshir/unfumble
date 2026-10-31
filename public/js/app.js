@@ -525,12 +525,13 @@ function renderPopularToolsGrid() {
       tab: 'tab-image-tools'
     },
     {
-      title: 'Compress Image',
-      desc: 'Iterative target file size in KB',
+      title: 'Reduce File Size (KB)',
+      desc: 'Compress JPEG/PNG to target KB limit',
       category: 'IMAGE',
       bg: 'bg-amber-50 text-amber-600',
       svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>',
-      tab: 'tab-image-tools'
+      action: 'prompt',
+      prompt: 'Reduce file size of my jpeg to under 100 KB'
     },
     {
       title: 'Images to PDF',
@@ -596,7 +597,7 @@ function renderPopularToolsGrid() {
   ];
 
   grid.innerHTML = popularTools.map(t => `
-    <div class="card card-hover cursor-pointer p-4 flex flex-col justify-between" data-tab="${t.tab}" data-subtab="${t.subtab || ''}">
+    <div class="card card-hover cursor-pointer p-4 flex flex-col justify-between" data-tab="${t.tab || ''}" data-subtab="${t.subtab || ''}" data-action="${t.action || ''}" data-prompt="${t.prompt || ''}">
       <div>
         <div class="flex items-center justify-between mb-3">
           <div class="w-9 h-9 rounded-xl ${t.bg} flex items-center justify-center">
@@ -614,11 +615,20 @@ function renderPopularToolsGrid() {
     </div>
   `).join('');
 
-  grid.querySelectorAll('[data-tab]').forEach(card => {
-    card.addEventListener('click', () => {
+  grid.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', async () => {
+      const action = card.getAttribute('data-action');
+      if (action === 'prompt') {
+        const promptText = card.getAttribute('data-prompt');
+        switchTab('tab-build-tool');
+        const builderInput = document.getElementById('builder-prompt-input');
+        if (builderInput) builderInput.value = promptText;
+        await executeToolGeneration(promptText);
+        return;
+      }
       const tab = card.getAttribute('data-tab');
       const subtab = card.getAttribute('data-subtab');
-      switchTab(tab);
+      if (tab) switchTab(tab);
       if (subtab) {
         const subtabBtn = document.querySelector(`[data-subtab="${subtab}"]`);
         if (subtabBtn) subtabBtn.click();
