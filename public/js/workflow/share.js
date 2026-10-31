@@ -72,7 +72,7 @@ export function decodeWorkflowFromHash(encodedHash) {
     return {
       id: `shared_${Date.now()}`,
       title: String(parsed.t || 'Shared Custom Tool').slice(0, 100),
-      description: String(parsed.d || 'Shared via FileFix link').slice(0, 500),
+      description: String(parsed.d || 'Shared via Unfumble link').slice(0, 500),
       inputTypes: Array.isArray(parsed.i) ? parsed.i.slice(0, 10) : ['*/*'],
       multiple: parsed.m === 1,
       operations: validatedOps,

@@ -144,7 +144,7 @@ export function renameFiles(files, options = {}) {
  * @param {string} archiveName
  * @returns {Promise<Blob|Buffer>}
  */
-export async function createZip(files, archiveName = 'FileFix_Export.zip') {
+export async function createZip(files, archiveName = 'Unfumble_Export.zip') {
   const JSZip = getJSZip();
   const zip = new JSZip();
 

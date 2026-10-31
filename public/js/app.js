@@ -28,6 +28,16 @@ const state = {
   smartFixRepaired: null
 };
 
+export function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
   loadSavedWorkflows();
@@ -227,7 +237,7 @@ function initGlobalSearch() {
 
     const matches = toolsList.filter(t => t.name.toLowerCase().includes(query) || t.category.toLowerCase().includes(query));
     if (matches.length === 0) {
-      dropdown.innerHTML = `<div class="p-3 text-xs text-slate-400 italic">No tools found matching "${query}"</div>`;
+      dropdown.innerHTML = `<div class="p-3 text-xs text-slate-400 italic">No tools found matching "${escapeHtml(query)}"</div>`;
     } else {
       dropdown.innerHTML = matches.map(m => `
         <div class="p-2.5 hover:bg-slate-50 cursor-pointer flex items-center justify-between border-b border-slate-100 last:border-0" data-tab="${m.tab}" data-subtab="${m.subtab || ''}">

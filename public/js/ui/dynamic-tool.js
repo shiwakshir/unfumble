@@ -362,10 +362,34 @@ export class DynamicToolRenderer {
   }
 
   addFiles(files) {
+    const MAX_FILE_SIZE = 250 * 1024 * 1024; // 250 MB browser safety limit
+    const safeFiles = [];
+    let oversizedCount = 0;
+
+    for (const file of files) {
+      if (file && file.size > MAX_FILE_SIZE) {
+        oversizedCount++;
+      } else if (file) {
+        safeFiles.push(file);
+      }
+    }
+
+    if (oversizedCount > 0) {
+      alert(`${oversizedCount} file(s) exceed the 250 MB browser safety limit and were skipped to protect your device memory.`);
+    }
+
+    if (safeFiles.length === 0) return;
+
     if (!this.workflow.multiple) {
-      this.uploadedFiles = [files[0]];
+      this.uploadedFiles = [safeFiles[0]];
     } else {
-      this.uploadedFiles = [...this.uploadedFiles, ...files];
+      const combined = [...this.uploadedFiles, ...safeFiles];
+      if (combined.length > 200) {
+        alert('Batch processing is limited to 200 files per run to ensure smooth performance.');
+        this.uploadedFiles = combined.slice(0, 200);
+      } else {
+        this.uploadedFiles = combined;
+      }
     }
     this.updateFileList();
   }
