@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d9488">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="FileFix — Your files. Your tools. Your way. AI-powered custom tool creator running 100% in your browser.">
+  <title>Unfumble — Your files. Your tools. Unfumbled.</title>
+  
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/styles.css?v=6">
+  
+  <!-- Vendor libraries (served locally from public/vendor) -->
+  <script src="vendor/pdf-lib.min.js"></script>
+  <script src="vendor/jszip.min.js"></script>
+  <script src="vendor/lucide.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- ================= TOP NAVIGATION ================= -->
+  <header class="bg-white border-b border-slate-200/80 sticky top-0 z-50 shadow-sm">
+    <div class="container flex items-center justify-between py-3">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" id="nav-brand">
+        <div class="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white font-bold text-lg shadow-sm shadow-teal-600/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-lg font-bold text-slate-900 tracking-tight">Unfumble</span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">File tools & custom workflows</p>
+        </div>
+      </div>
+
+      <!-- Center Nav Tabs -->
+      <nav class="hidden lg:flex items-center gap-1" id="main-nav-tabs">
+        <button class="nav-tab active" data-tab="tab-home">Home</button>
+        <button class="nav-tab" data-tab="tab-build-tool">Build My Tool</button>
+        <button class="nav-tab" data-tab="tab-smart-fix">Smart Fix</button>
+        <button class="nav-tab" data-tab="tab-pdf-tools">PDF Tools</button>
+        <button class="nav-tab" data-tab="tab-image-tools">Image Tools</button>
+        <button class="nav-tab" data-tab="tab-file-converter">File Converter</button>
+        <button class="nav-tab" data-tab="tab-batch-tools">Batch Utilities</button>
+        <button class="nav-tab" data-tab="tab-my-tools">My Tools</button>
+      </nav>
+
+      <!-- Right Header Actions: Search, Privacy Pill, Settings -->
+      <div class="flex items-center gap-2.5">
+        <!-- Global Search Bar -->
+        <div class="relative hidden md:block">
+          <input type="text" id="global-tool-search" placeholder="Search tools... (/)" class="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-teal-500 w-44 transition-all" />
+          <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <!-- Search Results Dropdown -->
+          <div class="absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 hidden" id="search-results-dropdown"></div>
+        </div>
+
+        <!-- Privacy Status Badge -->
+        <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium text-slate-600 bg-slate-100/80 border border-slate-200/60" title="All file operations execute locally on your device.">
+          <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          Runs locally
+        </div>
+
+        <!-- Feedback Button -->
+        <button id="btn-open-feedback" onclick="window.openFeedbackModal &amp;&amp; window.openFeedbackModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 rounded-lg transition-colors shadow-xs" title="Report a bug or suggest a feature">
+          <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+          <span class="hidden sm:inline">Feedback</span>
+        </button>
+
+        <!-- Ko-fi Support Button -->
+        <a id="btn-support-creator" href="https://ko-fi.com/shiwakshi" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 transition-colors shadow-xs" title="Support the creator on Ko-fi">
+          <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+          <span class="hidden sm:inline">Support on Ko-fi</span>
+          <span class="sm:hidden">Ko-fi</span>
+        </a>
+
+        <!-- PWA Install Button -->
+        <button id="btn-install-pwa" class="hidden inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-800 bg-teal-50 hover:bg-teal-100 border border-teal-200/80 transition-all shadow-xs" title="Install Unfumble on your desktop or phone for offline use">
+          <svg class="w-3.5 h-3.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span>Install App</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Subnav Bar -->
+    <div class="lg:hidden flex items-center gap-1 px-4 py-2 overflow-x-auto border-t border-slate-100 bg-slate-50/70" id="mobile-nav-tabs">
+      <button class="nav-tab active text-xs py-1" data-tab="tab-home">Home</button>
+      <button class="nav-tab text-xs py-1" data-tab="tab-build-tool">Build My Tool</button>
+      <button class="nav-tab text-xs py-1" data-tab="tab-smart-fix">Smart Fix</button>
+      <button class="nav-tab text-xs py-1" data-tab="tab-pdf-tools">PDF</button>
+      <button class="nav-tab text-xs py-1" data-tab="tab-image-tools">Images</button>
+      <button class="nav-tab text-xs py-1" data-tab="tab-file-converter">Converter</button>
+      <button class="nav-tab text-xs py-1" data-tab="tab-batch-tools">Batch</button>
+      <button class="nav-tab text-xs py-1" data-tab="tab-my-tools">My Tools</button>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT APP TABS ================= -->
+  <main class="flex-1 py-8">
+    <div class="container">
+
+      <!-- ================= TAB 1: HOMEPAGE ================= -->
+      <section id="tab-home" class="tab-content active space-y-12">
+        
+        <!-- Hero Section -->
+        <div class="text-center max-w-3xl mx-auto pt-4 pb-2">
+          
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight leading-tight">
+            What do you need to do with your files?
+          </h1>
+          <p class="text-slate-500 text-sm sm:text-base mt-3 max-w-2xl mx-auto">
+            Convert, compress, resize, merge, or describe a multi-step workflow in plain English.
+          </p>
+
+          <!-- Large Natural Language Input Box -->
+          <div class="mt-8 bg-white p-2 sm:p-2.5 rounded-2xl border border-slate-200 shadow-sm focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/20 transition-all text-left">
+            <div class="flex items-center gap-2">
+              <input type="text" id="home-nlp-input" placeholder="Describe what you need, e.g. Merge three PDFs and make smaller than 5 MB..." class="flex-1 min-w-0 pl-3.5 pr-2 py-2 text-sm sm:text-base text-slate-800 placeholder-slate-400 focus:outline-none bg-transparent" />
+              <button id="home-btn-build" class="btn btn-primary flex-shrink-0 px-5 sm:px-6 py-2.5 text-sm font-semibold rounded-xl flex items-center justify-center gap-1.5 shadow-xs">
+                <span>Build My Tool</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Suggestion Pills -->
+          <div class="flex items-center justify-center gap-2 flex-wrap mt-3 text-xs text-slate-500">
+            <span class="font-medium text-slate-400">Try:</span>
+            <button class="nlp-suggestion-pill px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors" data-prompt="Convert 15 images to JPG, resize to 600 by 800 with padding, make smaller than 200 KB and rename Photo_1">
+              "Resize 15 images to 600×800 with padding, &lt; 200 KB, rename Photo_1"
+            </button>
+            <button class="nlp-suggestion-pill px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors" data-prompt="Merge these PDFs, delete page 3, rotate page 5 and save as Application.pdf">
+              "Merge PDFs, delete page 3, rotate page 5 to Application.pdf"
+            </button>
+            <button class="nlp-suggestion-pill px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors" data-prompt="Prepare US Visa photo: 600x600, JPG, under 240 KB">
+              "Passport photo: 600×600, JPG, under 240 KB"
+            </button>
+          </div>
+        </div>
+
+        <!-- Three Prominent Product Actions -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <!-- Card 1: Build My Tool -->
+          <div class="card card-hover cursor-pointer relative overflow-hidden flex flex-col justify-between p-6" id="card-action-build">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600 mb-4">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-1.5">Custom Tool Builder</h3>
+              <p class="text-xs text-slate-500 mb-4 leading-relaxed">Describe any multi-step file task in ordinary language. Generated into an interactive, reusable tool.</p>
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-teal-600">
+              <span>Build custom tool</span>
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </div>
+          </div>
+
+          <!-- Card 2: Fix My File (Smart Fix) -->
+          <div class="card card-hover cursor-pointer relative overflow-hidden flex flex-col justify-between p-6" id="card-action-smartfix">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 mb-4">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-1.5">Smart Fix</h3>
+              <p class="text-xs text-slate-500 mb-4 leading-relaxed">Diagnose rejection errors from portals and automatically repair format, dimension, or size issues.</p>
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-indigo-600">
+              <span>Diagnose upload</span>
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </div>
+          </div>
+
+          <!-- Card 3: Browse All Tools -->
+          <div class="card card-hover cursor-pointer relative overflow-hidden flex flex-col justify-between p-6" id="card-action-browse">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 mb-4">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-1.5">Tool Catalog</h3>
+              <p class="text-xs text-slate-500 mb-4 leading-relaxed">Direct access to individual utilities for PDFs, images, data conversions, and bulk operations.</p>
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700">
+              <span>Browse tools</span>
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Global Drag & Drop Smart Dropzone -->
+        <div class="max-w-4xl mx-auto">
+          <div class="dropzone p-8" id="home-smart-dropzone">
+            <input type="file" id="home-smart-file-input" class="hidden" />
+            <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 mx-auto mb-3">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+            </div>
+            <h4 class="text-sm font-semibold text-slate-800">Drag & drop any file here to get smart recommendations</h4>
+            <p class="text-xs text-slate-500 mt-1">Unfumble will inspect the format and recommend the exact tools you need.</p>
+          </div>
+
+          <!-- File Recommendation Modal / Card (Shown when dropped) -->
+          <div class="mt-4 p-5 bg-white border border-slate-200 rounded-xl shadow-sm hidden" id="home-file-recommendation"></div>
+        </div>
+
+        <!-- Popular Ready-Made Tools Grid -->
+        <div class="max-w-4xl mx-auto pt-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">Popular File Tools</h2>
+              <p class="text-xs text-slate-500">Tested, client-side, zero-upload file operations</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="popular-tools-grid">
+            <!-- 12 Popular tools loaded dynamically -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 2: BUILD MY TOOL ================= -->
+      <section id="tab-build-tool" class="tab-content hidden space-y-8">
+        
+        <!-- Builder Header -->
+        <div class="max-w-4xl mx-auto text-center">
+          <h1 class="text-3xl font-bold text-slate-900">Custom Tool Builder</h1>
+          <p class="text-sm text-slate-500 mt-1 max-w-xl mx-auto">
+            Describe your file workflow in plain English. Unfumble generates a working interface with live controls, progress tracking, and batch download.
+          </p>
+
+          <!-- Request Input Area -->
+          <div class="mt-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-left">
+            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Describe Your Custom File Workflow</label>
+            <textarea id="builder-prompt-input" rows="3" placeholder="e.g. I have 15 images. Convert them all to JPG, resize them to 600 by 800 pixels, make each file smaller than 200 KB and rename them Photo_1, Photo_2, Photo_3." class="w-full p-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 bg-slate-50/50 resize-none"></textarea>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mt-3 pt-3 border-t border-slate-100">
+              <div class="flex items-center gap-2 flex-wrap text-xs text-slate-500">
+                <span>Templates:</span>
+                <button class="btn-template-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700" data-template-id="template_resize_rename_images">Resize & Rename 100 Photos</button>
+                <button class="btn-template-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700" data-template-id="template_merge_compress_pdf">Merge & Compress PDFs</button>
+                <button class="btn-template-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700" data-template-id="template_receipts_to_pdf">Receipts to A4 PDF</button>
+              </div>
+
+              <button id="btn-generate-tool" class="btn btn-primary px-6 py-2.5 text-sm font-semibold rounded-xl flex items-center gap-2 w-full sm:w-auto">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                <span>Generate Custom Tool</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generated Dynamic Tool Output Container -->
+        <div class="max-w-4xl mx-auto" id="dynamic-tool-mount"></div>
+
+        <!-- Pre-built Tool Templates Gallery -->
+        <div class="max-w-4xl mx-auto pt-6 border-t border-slate-200/80">
+          <div class="mb-4">
+            <h2 class="text-lg font-bold text-slate-900">Workflow Presets</h2>
+            <p class="text-xs text-slate-500">Pick any template to inspect, modify with natural language, or run immediately</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="workflow-templates-grid"></div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 3: SMART FIX ================= -->
+      <section id="tab-smart-fix" class="tab-content hidden space-y-8">
+        
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="text-3xl font-bold text-slate-900">Smart Fix</h1>
+          <p class="text-sm text-slate-500 mt-1">
+            Diagnose rejection errors from portals and automatically resize, reformat, and compress files to match.
+          </p>
+        </div>
+
+        <div class="max-w-3xl mx-auto space-y-6">
+          
+          <!-- Step 1: Upload Rejected File -->
+          <div class="card">
+            <h3 class="text-sm font-bold text-slate-900 mb-3">Upload File to Inspect</h3>
+            <div class="dropzone p-6" id="smartfix-dropzone">
+              <input type="file" id="smartfix-file-input" class="hidden" />
+              <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 mx-auto mb-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+              </div>
+              <p class="text-sm font-semibold text-slate-700" id="smartfix-file-label">
+                Drag & drop rejected file here, or <span class="text-teal-600 underline">browse</span>
+              </p>
+              <p class="text-xs text-slate-400 mt-1">Supports HEIC, JPG, PNG, PDF, WebP and common documents</p>
+            </div>
+          </div>
+
+          <!-- Step 2: Website Requirements -->
+          <div class="card">
+            <h3 class="text-sm font-bold text-slate-900 mb-3">Target Requirements</h3>
+
+            <!-- Preset Selector -->
+            <div class="mb-4">
+              <label class="block text-xs font-medium text-slate-600 mb-1">Select Common Portal Preset</label>
+              <select id="smartfix-preset-select" class="select-input">
+                <option value="custom">Custom Requirements / Freeform text</option>
+                <option value="passport_visa">US / Schengen Visa & Passport Photo (600×600 JPG, &lt; 240 KB)</option>
+                <option value="job_portal">Job Application Portal (Resume PDF, &lt; 2 MB, &le; 3 pages)</option>
+                <option value="gov_portal">Government Submission (PDF or JPG, &lt; 1 MB)</option>
+                <option value="academic_paper">Academic Journal Submission (PDF, &lt; 10 MB)</option>
+              </select>
+            </div>
+
+            <!-- Paste Requirements Text -->
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">Or Paste Website File Requirements / Error Message</label>
+              <textarea id="smartfix-requirements-text" rows="2" placeholder="e.g. Uploaded photo must be in JPG format, exactly 600x600 pixels, and under 240 KB." class="w-full p-2.5 text-xs rounded-lg border border-slate-200 focus:ring-1 focus:ring-teal-500 bg-slate-50/50 resize-none"></textarea>
+            </div>
+
+            <!-- Manual Limits Row -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-3 border-t border-slate-100">
+              <div>
+                <label class="block text-[11px] font-medium text-slate-500 mb-1">Max Size (KB)</label>
+                <input type="number" id="smartfix-rule-size" placeholder="e.g. 240" class="input-text text-xs py-1" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-medium text-slate-500 mb-1">Required Format</label>
+                <select id="smartfix-rule-format" class="select-input text-xs py-1">
+                  <option value="any">Any / Detect</option>
+                  <option value="jpg">JPG (.jpg)</option>
+                  <option value="png">PNG (.png)</option>
+                  <option value="pdf">PDF (.pdf)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-medium text-slate-500 mb-1">Width (px)</label>
+                <input type="number" id="smartfix-rule-width" placeholder="e.g. 600" class="input-text text-xs py-1" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-medium text-slate-500 mb-1">Height (px)</label>
+                <input type="number" id="smartfix-rule-height" placeholder="e.g. 600" class="input-text text-xs py-1" />
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-end">
+              <button id="btn-run-smartfix-check" class="btn btn-primary text-xs px-5 py-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                Run Compatibility Check
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3: Diagnostic Results Box -->
+          <div class="card hidden" id="smartfix-results-card">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div>
+                <h3 class="text-base font-bold text-slate-900">Compatibility Diagnostic</h3>
+                <p class="text-xs text-slate-500" id="smartfix-diagnostic-summary"></p>
+              </div>
+              <div id="smartfix-status-badge"></div>
+            </div>
+
+            <!-- Checklist Table -->
+            <div class="my-4 space-y-2" id="smartfix-checklist-container"></div>
+
+            <!-- "Fix Everything Possible" Action Button -->
+            <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <p class="text-xs text-slate-500">Unfumble will convert, resize, pad, and compress automatically.</p>
+              <button id="btn-fix-everything" class="btn btn-primary w-full sm:w-auto px-6 py-2.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Fix Everything Possible
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 4: Repaired Output & Comparison Box -->
+          <div class="card hidden bg-gradient-to-b from-white to-teal-50/20 border-teal-200" id="smartfix-repaired-card">
+            <div class="flex items-center justify-between pb-4 border-b border-teal-100">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="badge badge-pass">Repaired & Verified</span>
+                  <h3 class="text-base font-bold text-slate-900">File Ready for Submission</h3>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">100% of tested portal requirements satisfied.</p>
+              </div>
+              <button id="btn-download-repaired" class="btn btn-primary text-xs px-4 py-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download Repaired File
+              </button>
+            </div>
+
+            <!-- Before vs After Comparison Table -->
+            <div class="my-4 border border-slate-200 rounded-xl overflow-hidden bg-white">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
+                  <tr>
+                    <th class="py-2.5 px-4">Property</th>
+                    <th class="py-2.5 px-4">Original (Rejected)</th>
+                    <th class="py-2.5 px-4">Repaired (Accepted)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100" id="smartfix-comparison-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 4: PDF TOOLS ================= -->
+      <section id="tab-pdf-tools" class="tab-content hidden space-y-6">
+        <div class="max-w-4xl mx-auto">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h1 class="text-2xl font-bold text-slate-900">PDF Toolkit</h1>
+              <p class="text-xs text-slate-500">Merge, split, organize, and compress PDF documents</p>
+            </div>
+          </div>
+
+          <!-- PDF Tool Sub-nav -->
+          <div class="mb-6 overflow-x-auto pb-1">
+            <div class="subtab-bar">
+              <button class="pdf-subtab subtab-item active" data-subtab="pdf-merge">Merge PDFs</button>
+              <button class="pdf-subtab subtab-item" data-subtab="pdf-split">Split PDF</button>
+              <button class="pdf-subtab subtab-item" data-subtab="pdf-organize">Organize & Rotate</button>
+              <button class="pdf-subtab subtab-item" data-subtab="pdf-img-to-pdf">Images to PDF</button>
+              <button class="pdf-subtab subtab-item" data-subtab="pdf-compress">Compress PDF</button>
+            </div>
+          </div>
+
+          <!-- PDF Subview 1: Merge PDFs -->
+          <div id="pdf-merge-view" class="pdf-subview space-y-4">
+            <div class="card">
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900">Merge PDF Documents</h3>
+                  <p class="text-xs text-slate-500">Combine multiple PDF files into one clean document.</p>
+                </div>
+              </div>
+              <div class="dropzone p-6" id="pdf-merge-dropzone">
+                <input type="file" id="pdf-merge-file-input" multiple accept="application/pdf" class="hidden" />
+                <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mx-auto mb-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
+                </div>
+                <p class="text-sm font-semibold text-slate-800">Drop PDF files here, or <span class="text-teal-600 underline">browse</span></p>
+                <p class="text-xs text-slate-400 mt-1">Select 2 or more PDFs to combine into a single document</p>
+              </div>
+              <div class="mt-4 space-y-2 hidden" id="pdf-merge-list-container">
+                <div class="flex items-center justify-between pb-1">
+                  <span class="text-xs font-semibold text-slate-600" id="pdf-merge-count-label">Files to Merge</span>
+                  <button type="button" id="btn-clear-merge-files" class="text-xs text-rose-500 hover:underline">Clear all</button>
+                </div>
+                <div class="space-y-1.5" id="pdf-merge-items"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
+                  <div class="flex items-center gap-2">
+                    <label class="text-xs font-medium text-slate-600">Output name:</label>
+                    <input type="text" id="pdf-merge-outname" value="Merged_Document.pdf" class="input-text text-xs w-56" />
+                  </div>
+                  <button id="btn-execute-pdf-merge" class="btn btn-primary text-xs px-5 py-2">Merge Documents</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PDF Subview 2: Split PDF -->
+          <div id="pdf-split-view" class="pdf-subview space-y-4 hidden">
+            <div class="card">
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900">Split PDF Document</h3>
+                  <p class="text-xs text-slate-500">Extract specific pages or extract every page into separate files.</p>
+                </div>
+                </div>
+              <div class="dropzone p-6" id="pdf-split-dropzone">
+                <input type="file" id="pdf-split-file-input" accept="application/pdf" class="hidden" />
+                <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mx-auto mb-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/></svg>
+                </div>
+                <p class="text-sm font-semibold text-slate-800">Drop a PDF file here, or <span class="text-teal-600 underline">browse</span></p>
+                <p class="text-xs text-slate-400 mt-1">Fast in-memory page extraction</p>
+              </div>
+              <div class="mt-4 space-y-3 hidden" id="pdf-split-controls">
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 flex items-center justify-between" id="pdf-split-info"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Split Mode</label>
+                    <select id="pdf-split-mode" class="select-input text-xs">
+                      <option value="all">Extract all pages to individual files in ZIP</option>
+                      <option value="range">Specific page range (e.g. 1-3, 5)</option>
+                    </select>
+                  </div>
+                  <div id="pdf-split-range-box" class="hidden">
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Page Ranges</label>
+                    <input type="text" id="pdf-split-ranges" placeholder="e.g. 1-3, 5" class="input-text text-xs" />
+                  </div>
+                </div>
+                <div class="flex justify-end pt-2">
+                  <button id="btn-execute-pdf-split" class="btn btn-primary text-xs px-5 py-2">Split & Download ZIP</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PDF Subview 3: Organize & Rotate Pages -->
+          <div id="pdf-organize-view" class="pdf-subview space-y-4 hidden">
+            <div class="card">
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900">Organize, Rotate & Delete Pages</h3>
+                  <p class="text-xs text-slate-500">Upload a PDF to view page thumbnails, rotate individual pages, or delete blank pages.</p>
+                </div>
+                </div>
+              <div class="dropzone p-6" id="pdf-organize-dropzone">
+                <input type="file" id="pdf-organize-file-input" accept="application/pdf" class="hidden" />
+                <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mx-auto mb-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                </div>
+                <p class="text-sm font-semibold text-slate-800">Drop a PDF here to organize pages, or <span class="text-teal-600 underline">browse</span></p>
+                <p class="text-xs text-slate-400 mt-1">Interactive page visual organizer</p>
+              </div>
+              <div class="mt-4 space-y-4 hidden" id="pdf-organize-workspace">
+                <div class="flex items-center justify-between bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
+                  <div id="pdf-organize-stats" class="font-medium text-slate-700"></div>
+                  <div class="flex items-center gap-2">
+                    <button id="btn-rotate-all-90" class="btn btn-secondary btn-sm">Rotate All 90°</button>
+                    <button id="btn-save-organized-pdf" class="btn btn-primary btn-sm">Save New PDF</button>
+                  </div>
+                </div>
+                <div class="pdf-page-grid" id="pdf-organize-grid"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PDF Subview 4: Images to PDF -->
+          <div id="pdf-img-to-pdf-view" class="pdf-subview space-y-4 hidden">
+            <div class="card">
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900">Combine Images into One PDF</h3>
+                  <p class="text-xs text-slate-500">Assemble photographs or scans into a clean document.</p>
+                </div>
+                </div>
+              <div class="dropzone p-6" id="pdf-img2pdf-dropzone">
+                <input type="file" id="pdf-img2pdf-file-input" multiple accept="image/*" class="hidden" />
+                <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mx-auto mb-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <p class="text-sm font-semibold text-slate-800">Drop images (JPG, PNG) here, or <span class="text-teal-600 underline">browse</span></p>
+                <p class="text-xs text-slate-400 mt-1">Multiple images will be arranged as consecutive pages</p>
+              </div>
+              <div class="mt-4 space-y-3 hidden" id="pdf-img2pdf-controls">
+                <div class="flex items-center justify-between text-xs text-slate-600 font-medium pb-1" id="pdf-img2pdf-status"></div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Page Layout</label>
+                    <select id="pdf-img2pdf-pagesize" class="select-input text-xs">
+                      <option value="fit_image">Fit page to image size</option>
+                      <option value="a4">Standard A4 Sheet</option>
+                      <option value="letter">US Letter</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Page Margin (px)</label>
+                    <input type="number" id="pdf-img2pdf-margin" value="20" class="input-text text-xs" />
+                  </div>
+                </div>
+                <div class="flex justify-end pt-2">
+                  <button id="btn-execute-img2pdf" class="btn btn-primary text-xs px-5 py-2">Create PDF Document</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PDF Subview 5: Compress PDF -->
+          <div id="pdf-compress-view" class="pdf-subview space-y-4 hidden">
+            <div class="card">
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900">Compress PDF Document</h3>
+                  <p class="text-xs text-slate-500">Defragment document structure, strip unreferenced objects, and enable object stream compression.</p>
+                </div>
+                </div>
+
+              <div class="dropzone p-6" id="pdf-compress-dropzone">
+                <input type="file" id="pdf-compress-file-input" accept="application/pdf" class="hidden" />
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                </div>
+                <p class="text-sm font-semibold text-slate-800" id="pdf-compress-prompt-text">
+                  Drop PDF here, or <span class="text-emerald-600 underline">browse files</span>
+                </p>
+                <p class="text-xs text-slate-400 mt-1">Processed 100% locally on your computer</p>
+              </div>
+
+              <!-- Selected File Card -->
+              <div class="mt-4 hidden" id="pdf-compress-file-card"></div>
+
+              <!-- Controls & Compression Settings -->
+              <div class="mt-4 space-y-4 hidden" id="pdf-compress-controls">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Compression Level</label>
+                    <select id="pdf-compress-level" class="select-input text-xs">
+                      <option value="balanced" selected>Recommended (Balanced) — High reduction, crisp quality</option>
+                      <option value="extreme">Extreme — Maximum compression for strict upload limits</option>
+                      <option value="lossless">Low (Lossless) — Light cleanup, preserves all metadata</option>
+                    </select>
+                    <p class="text-[11px] text-slate-500 mt-1.5">Streamlines document structure and removes redundant data objects.</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Document Fidelity</label>
+                    <div class="p-2.5 bg-white rounded-lg border border-slate-200/80 flex items-start gap-2.5">
+                      <div class="w-6 h-6 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                      </div>
+                      <div>
+                        <div class="text-xs font-bold text-slate-800">100% Text & Vector Quality</div>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Typography, tables, and vector graphics remain sharp, clear, and selectable.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2">
+                  <div class="text-xs text-slate-400" id="pdf-compress-status-text"></div>
+                  <button id="btn-execute-pdf-compress" class="btn btn-primary text-xs px-6 py-2.5 font-bold flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                    <span>Optimize & Download</span>
+                  </button>
+                </div>
+
+                <!-- Result Card -->
+                <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl hidden" id="pdf-compress-result-card">
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="badge badge-pass">Optimization Complete</span>
+                        <span class="text-xs font-bold text-emerald-800" id="pdf-compress-savings-badge"></span>
+                      </div>
+                      <p class="text-xs text-slate-600 mt-1" id="pdf-compress-comparison-text"></p>
+                    </div>
+                    <button id="btn-download-compressed-pdf" class="btn btn-primary btn-sm flex items-center gap-1.5 self-start sm:self-auto">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                      <span>Download Optimized PDF</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: IMAGE TOOLS ================= -->
+      <section id="tab-image-tools" class="tab-content hidden space-y-6">
+        <div class="max-w-4xl mx-auto">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h1 class="text-2xl font-bold text-slate-900">Image Toolkit</h1>
+              <p class="text-xs text-slate-500">Resize, crop, convert, and compress images</p>
+            </div>
+          </div>
+
+          <!-- Image Dropzone -->
+          <div class="card">
+            <div class="dropzone p-6" id="img-toolkit-dropzone">
+              <input type="file" id="img-toolkit-file-input" multiple accept="image/*" class="hidden" />
+              <p class="text-sm font-semibold text-slate-700">Drop images (JPG, PNG, WebP) here or click to browse</p>
+              <p class="text-xs text-slate-400 mt-1">Single or batch processing supported</p>
+            </div>
+
+            <!-- Image Settings & Processing Controls -->
+            <div class="mt-6 space-y-4 hidden" id="img-toolkit-controls">
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                  <label class="block text-xs font-medium text-slate-600 mb-1">Target Dimensions</label>
+                  <div class="flex items-center gap-1.5">
+                    <input type="number" id="img-ctrl-w" value="800" class="input-text text-xs" />
+                    <span class="text-slate-400 text-xs">×</span>
+                    <input type="number" id="img-ctrl-h" value="600" class="input-text text-xs" />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-slate-600 mb-1">Resizing Mode</label>
+                  <select id="img-ctrl-mode" class="select-input text-xs">
+                    <option value="pad">Pad (Add color space, no crop)</option>
+                    <option value="fit">Fit (Scale inside)</option>
+                    <option value="fill">Fill (Crop to fill)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-slate-600 mb-1">Pad Background Color</label>
+                  <div class="flex items-center gap-2">
+                    <input type="color" id="img-ctrl-padcolor" value="#ffffff" class="w-8 h-8 rounded border border-slate-200" />
+                    <span class="text-xs text-slate-500">White (#FFF)</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-slate-600 mb-1">Format & Max KB</label>
+                  <div class="flex items-center gap-1.5">
+                    <select id="img-ctrl-format" class="select-input text-xs w-1/2">
+                      <option value="image/jpeg">JPG</option>
+                      <option value="image/png">PNG</option>
+                      <option value="image/webp">WebP</option>
+                    </select>
+                    <input type="number" id="img-ctrl-maxkb" placeholder="Max KB" class="input-text text-xs w-1/2" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action button -->
+              <div class="pt-3 border-t border-slate-100 flex justify-end">
+                <button id="btn-execute-img-process" class="btn btn-primary text-xs px-6 py-2.5">Process Images</button>
+              </div>
+
+              <!-- Output results -->
+              <div class="mt-4 hidden" id="img-toolkit-results">
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Processed Output</h4>
+                  <button id="btn-download-img-zip" class="btn btn-dark btn-sm">Download All (ZIP)</button>
+                </div>
+                <div class="space-y-2" id="img-toolkit-output-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 6: FILE CONVERTER ================= -->
+      <section id="tab-file-converter" class="tab-content hidden space-y-6">
+        <div class="max-w-4xl mx-auto">
+          <div class="mb-4">
+            <h1 class="text-2xl font-bold text-slate-900">Universal File Converter</h1>
+            <p class="text-xs text-slate-500">Convert images, spreadsheets, and tabular datasets</p>
+          </div>
+
+          <div class="card space-y-6">
+            <div class="dropzone p-6" id="converter-dropzone">
+              <input type="file" id="converter-file-input" class="hidden" />
+              <p class="text-sm font-semibold text-slate-700">Drop any file to convert (Images, CSV, JSON)</p>
+            </div>
+
+            <div class="space-y-4 hidden" id="converter-controls">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-medium text-slate-500 mb-1">Source File Detected</label>
+                  <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 text-xs font-medium text-slate-800" id="converter-source-info"></div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-slate-500 mb-1">Convert To</label>
+                  <select id="converter-target-select" class="select-input text-xs"></select>
+                </div>
+              </div>
+
+              <div class="pt-2 flex justify-end">
+                <button id="btn-execute-convert" class="btn btn-primary text-xs px-6 py-2">Convert File</button>
+              </div>
+
+              <!-- Download converted result -->
+              <div class="p-4 bg-teal-50 border border-teal-200 rounded-xl hidden flex items-center justify-between" id="converter-download-box">
+                <div>
+                  <span class="text-xs font-bold text-teal-800">Conversion Complete</span>
+                  <p class="text-xs text-teal-600" id="converter-result-name"></p>
+                </div>
+                <button id="btn-download-converted" class="btn btn-primary btn-sm">Download</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 7: BATCH & UTILITIES ================= -->
+      <section id="tab-batch-tools" class="tab-content hidden space-y-6">
+        <div class="max-w-4xl mx-auto">
+          <div class="mb-4">
+            <h1 class="text-2xl font-bold text-slate-900">Batch Utilities & File Tools</h1>
+            <p class="text-xs text-slate-500">Batch rename, deduplicate, and inspect files</p>
+          </div>
+
+          <!-- Utility Subtabs -->
+          <div class="mb-6 overflow-x-auto pb-1">
+            <div class="subtab-bar">
+              <button class="batch-subtab subtab-item active" data-subtab="batch-rename">Filename Fixer</button>
+              <button class="batch-subtab subtab-item" data-subtab="batch-duplicates">Duplicate Finder</button>
+              <button class="batch-subtab subtab-item" data-subtab="batch-inspector">File Inspector</button>
+            </div>
+          </div>
+
+          <!-- Subview 1: Filename Fixer -->
+          <div id="batch-rename-view" class="batch-subview space-y-4">
+            <div class="card space-y-4">
+              <h3 class="text-sm font-bold text-slate-900">Filename Fixer & Bulk Renamer</h3>
+              <p class="text-xs text-slate-500">Pattern-based renaming with live collision detection and zero file overwriting.</p>
+              
+              <div class="dropzone p-5" id="rename-dropzone">
+                <input type="file" id="rename-file-input" multiple class="hidden" />
+                <p class="text-xs font-semibold text-slate-700">Drop files to rename</p>
+              </div>
+
+              <div class="space-y-3 hidden" id="rename-controls-box">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Pattern</label>
+                    <input type="text" id="rename-pattern-input" value="Photo_{n}" class="input-text text-xs" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Space Handling</label>
+                    <select id="rename-spaces-select" class="select-input text-xs">
+                      <option value="keep">Keep spaces</option>
+                      <option value="underscore">Replace with _ (underscore)</option>
+                      <option value="hyphen">Replace with - (hyphen)</option>
+                      <option value="remove">Remove spaces</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Casing</label>
+                    <select id="rename-casing-select" class="select-input text-xs">
+                      <option value="preserve">Preserve case</option>
+                      <option value="lowercase">all lowercase</option>
+                      <option value="uppercase">ALL UPPERCASE</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Live Preview Table -->
+                <div class="border border-slate-200 rounded-lg overflow-hidden text-xs">
+                  <table class="w-full text-left">
+                    <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+                      <tr>
+                        <th class="p-2.5">Original Filename</th>
+                        <th class="p-2.5">&rarr;</th>
+                        <th class="p-2.5">New Filename</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100" id="rename-preview-tbody"></tbody>
+                  </table>
+                </div>
+
+                <div class="pt-2 flex justify-end">
+                  <button id="btn-execute-rename-zip" class="btn btn-primary text-xs px-5 py-2">Download Renamed Files (ZIP)</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subview 2: Duplicate Finder -->
+          <div id="batch-duplicates-view" class="batch-subview space-y-4 hidden">
+            <div class="card space-y-4">
+              <h3 class="text-sm font-bold text-slate-900">Cryptographic Duplicate Finder</h3>
+              <p class="text-xs text-slate-500">Identifies exact duplicate files using SHA-256 cryptographic hashes.</p>
+              
+              <div class="dropzone p-5" id="dupe-dropzone">
+                <input type="file" id="dupe-file-input" multiple class="hidden" />
+                <p class="text-xs font-semibold text-slate-700">Drop files to scan for duplicates</p>
+              </div>
+
+              <div class="space-y-3 hidden" id="dupe-results-box"></div>
+            </div>
+          </div>
+
+          <!-- Subview 3: File Inspector -->
+          <div id="batch-inspector-view" class="batch-subview space-y-4 hidden">
+            <div class="card space-y-4">
+              <h3 class="text-sm font-bold text-slate-900">Deep File Inspector</h3>
+              <p class="text-xs text-slate-500">Reveals true MIME type, magic byte signature, and dimensions.</p>
+              
+              <div class="dropzone p-5" id="inspect-dropzone">
+                <input type="file" id="inspect-file-input" class="hidden" />
+                <p class="text-xs font-semibold text-slate-700">Drop any file to inspect</p>
+              </div>
+
+              <div class="space-y-3 hidden" id="inspect-results-box"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= TAB 8: MY TOOLS ================= -->
+      <section id="tab-my-tools" class="tab-content hidden space-y-6">
+        <div class="max-w-4xl mx-auto">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h1 class="text-2xl font-bold text-slate-900">My Tools</h1>
+              <p class="text-xs text-slate-500">Saved custom workflows stored locally in your browser</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="btn-import-workflow-json" class="btn btn-secondary btn-sm">Import Workflow</button>
+              <input type="file" id="input-import-workflow-file" accept="application/json" class="hidden" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="my-tools-grid">
+            <!-- Saved tools loaded from localStorage -->
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= MODERN FOOTER ================= -->
+  <footer class="bg-white border-t border-slate-200/80 py-8 mt-12 text-slate-500 text-xs">
+    <div class="container flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-6 h-6 rounded-lg bg-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        </div>
+        <span class="font-bold text-slate-800 tracking-tight">Unfumble</span>
+        <span class="text-slate-300">|</span>
+        <span>Your files. Your tools. Unfumbled.</span>
+      </div>
+      <div class="flex items-center gap-4 text-xs text-slate-400">
+        <span>Processed locally in browser</span>
+        <span>&bull;</span>
+        <button id="footer-feedback-link" onclick="window.openFeedbackModal &amp;&amp; window.openFeedbackModal()" class="text-slate-500 hover:text-slate-800 transition-colors inline-flex items-center gap-1">
+          <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+          Feedback & Bugs
+        </button>
+        <span>&bull;</span>
+        <a id="footer-support-link" href="https://ko-fi.com/shiwakshi" target="_blank" rel="noopener noreferrer" class="text-amber-700 hover:text-amber-800 font-medium inline-flex items-center gap-1">
+          <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+          Support on Ko-fi
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= SETTINGS MODAL ================= -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-content space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-lg font-bold text-slate-900">Settings & AI Configuration</h3>
+        <button id="btn-close-settings" class="text-slate-400 hover:text-slate-600 p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs text-slate-600">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Gemini API Key (Optional)</label>
+          <input type="password" id="input-gemini-key" placeholder="AIzaSy..." class="input-text text-xs" />
+          <p class="text-[11px] text-slate-400 mt-1">
+            Unfumble works 100% offline out-of-the-box using its built-in semantic planner. Entering an API key enables Gemini 2.5 Flash for conversational reasoning. Key stays in your browser's localStorage.
+          </p>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Buy Me a Coffee / Tip Link (Optional)</label>
+          <input type="url" id="input-support-url" placeholder="https://buymeacoffee.com/yourusername" class="input-text text-xs" />
+          <p class="text-[11px] text-slate-400 mt-1">
+            Enter your Buy Me a Coffee, Ko-fi, or Stripe Payment link. Keeps Unfumble completely free while giving users a safe, secure way to tip you.
+          </p>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <span class="font-semibold text-slate-800">Privacy Guarantee:</span>
+          <p class="text-[11px] text-slate-500 mt-1">
+            All PDF, image, and file conversions occur directly inside your browser using client-side WebAssembly and HTML5 Canvas. Your sensitive documents, passports, and photos are never uploaded to any remote server or third-party AI.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center pt-3 border-t border-slate-100">
+        <button id="btn-clear-my-tools" class="text-rose-500 hover:underline text-xs">Clear Saved Workflows</button>
+        <button id="btn-save-settings" class="btn btn-primary text-xs px-5 py-2">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FEEDBACK & BUG REPORT MODAL ================= -->
+  <div class="modal-overlay" id="feedback-modal">
+    <div class="modal-content space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Feedback & Bug Report</h3>
+          <p class="text-xs text-slate-500">Report an issue, request a file tool, or share thoughts.</p>
+        </div>
+        <button id="btn-close-feedback" class="text-slate-400 hover:text-slate-600 p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <form id="feedback-form" class="space-y-4 text-xs text-slate-600">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1.5">Category</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center justify-center p-2 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 text-center font-medium bg-teal-50 border-teal-600 text-teal-900 feedback-type-pill" data-type="bug">
+              <input type="radio" name="feedback_type" value="bug" checked class="hidden" />
+              <span>🐞 Bug</span>
+            </label>
+            <label class="flex items-center justify-center p-2 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 text-center font-medium feedback-type-pill" data-type="feature">
+              <input type="radio" name="feedback_type" value="feature" class="hidden" />
+              <span>💡 New Tool</span>
+            </label>
+            <label class="flex items-center justify-center p-2 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 text-center font-medium feedback-type-pill" data-type="other">
+              <input type="radio" name="feedback_type" value="other" class="hidden" />
+              <span>💬 Other</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Details</label>
+          <textarea id="feedback-details" rows="4" required placeholder="Describe what happened or what tool you would like to see..." class="input-text text-xs resize-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Your Email (Optional)</label>
+          <input type="email" id="feedback-email" placeholder="you@example.com (only if you'd like a reply)" class="input-text text-xs" />
+        </div>
+
+        <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 text-[11px] text-slate-500 flex items-center justify-between">
+          <span>Diagnostic info:</span>
+          <span class="font-mono text-slate-600 text-[10px]" id="feedback-diagnostics-text">Loading...</span>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+          <button type="button" id="btn-cancel-feedback" class="btn btn-secondary text-xs px-4 py-2">Cancel</button>
+          <button type="submit" id="btn-submit-feedback" class="btn btn-primary text-xs px-5 py-2">Submit Report</button>
+        </div>
+      </form>
+
+      <!-- Success State -->
+      <div id="feedback-success-state" class="hidden py-6 text-center space-y-3">
+        <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h4 class="text-base font-bold text-slate-900">Thank you!</h4>
+        <p class="text-xs text-slate-500 max-w-xs mx-auto">Your feedback has been recorded. We read every submission to keep improving Unfumble.</p>
+        <button type="button" id="btn-feedback-done" class="btn btn-primary text-xs px-6 py-2 mt-2">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Application Script (ES Module with cache-busting) -->
+  <script type="module" src="js/app.js?v=6"></script>
+</body>
+</html>

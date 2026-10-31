@@ -1,0 +1,28 @@
+{
+  "name": "filefix",
+  "version": "1.0.0",
+  "description": "Your files. Your tools. Your way. AI-powered file toolkit and custom tool creator.",
+  "type": "module",
+  "main": "server/server.mjs",
+  "scripts": {
+    "start": "node server/server.mjs",
+    "test": "node tests/test-runner.mjs",
+    "dev": "node server/server.mjs"
+  },
+  "keywords": [
+    "pdf",
+    "image-processing",
+    "file-converter",
+    "smart-fix",
+    "ai-workflow",
+    "custom-tools",
+    "privacy-first"
+  ],
+  "author": "FileFix Team",
+  "license": "MIT",
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "pdf-lib": "^1.17.1",
+    "sharp": "^0.33.5"
+  }
+}

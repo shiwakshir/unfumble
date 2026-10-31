@@ -1,0 +1,43 @@
+{
+  "name": "Unfumble — Your files. Your tools. Unfumbled.",
+  "short_name": "Unfumble",
+  "description": "All-in-one AI-powered file toolkit and custom tool creator running 100% in your browser.",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0d9488",
+  "orientation": "any",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Build My Tool",
+      "url": "/#tab=build-tool",
+      "description": "Create custom AI file processing workflow"
+    },
+    {
+      "name": "Smart Fix",
+      "url": "/#tab=smart-fix",
+      "description": "Diagnose and repair rejected file uploads"
+    },
+    {
+      "name": "PDF Tools",
+      "url": "/#tab=pdf-tools",
+      "description": "Merge, split, rotate, and compress PDFs"
+    }
+  ]
+}
