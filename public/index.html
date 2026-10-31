@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <link rel="stylesheet" href="css/styles.css?v=6">
+  <link rel="stylesheet" href="css/styles.css?v=8">
   
   <!-- Vendor libraries (served locally from public/vendor) -->
   <script src="vendor/pdf-lib.min.js"></script>
@@ -906,33 +906,43 @@
   </main>
 
   <!-- ================= MODERN FOOTER ================= -->
-  <footer class="bg-white border-t border-slate-200/80 py-8 mt-12 text-slate-500 text-xs">
-    <div class="container flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-6 h-6 rounded-lg bg-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+  <footer class="site-footer">
+    <div class="container site-footer-inner">
+      <!-- Brand & Tagline -->
+      <div class="site-footer-brand-wrap">
+        <div class="site-footer-brand">
+          <div class="w-6 h-6 rounded-lg bg-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          </div>
+          <span class="font-bold text-slate-800 tracking-tight text-sm">Unfumble</span>
         </div>
-        <span class="font-bold text-slate-800 tracking-tight">Unfumble</span>
-        <span class="text-slate-300">|</span>
-        <span>Your files. Your tools. Unfumbled.</span>
+        <span class="hidden sm:inline site-footer-divider">|</span>
+        <span class="site-footer-tagline">Your files. Your tools. Unfumbled.</span>
       </div>
-      <div class="flex items-center gap-4 text-xs text-slate-400">
-        <span>Processed locally in browser</span>
-        <span>&bull;</span>
-        <button id="footer-privacy-link" onclick="window.openPrivacyModal &amp;&amp; window.openPrivacyModal()" class="text-slate-500 hover:text-slate-800 transition-colors inline-flex items-center gap-1">
-          <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-          Privacy & Terms
-        </button>
-        <span>&bull;</span>
-        <button id="footer-feedback-link" onclick="window.openFeedbackModal &amp;&amp; window.openFeedbackModal()" class="text-slate-500 hover:text-slate-800 transition-colors inline-flex items-center gap-1">
-          <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
-          Feedback & Bugs
-        </button>
-        <span>&bull;</span>
-        <a id="footer-support-link" href="https://ko-fi.com/shiwakshi" target="_blank" rel="noopener noreferrer" class="text-amber-700 hover:text-amber-800 font-medium inline-flex items-center gap-1">
-          <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
-          Bribe the developer ☕
-        </a>
+
+      <!-- Trust Pill & Action Links -->
+      <div class="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-4">
+        <span class="site-footer-pill">
+          <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          100% Client-Side • Zero Server Storage
+        </span>
+
+        <div class="site-footer-links">
+          <button id="footer-privacy-link" onclick="window.openPrivacyModal &amp;&amp; window.openPrivacyModal()" class="site-footer-btn">
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            Privacy & Terms
+          </button>
+
+          <button id="footer-feedback-link" onclick="window.openFeedbackModal &amp;&amp; window.openFeedbackModal()" class="site-footer-btn">
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+            Feedback
+          </button>
+
+          <a id="footer-support-link" href="https://ko-fi.com/shiwakshi" target="_blank" rel="noopener noreferrer" class="site-footer-btn highlight">
+            <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+            Bribe the developer ☕
+          </a>
+        </div>
       </div>
     </div>
   </footer>
@@ -1106,6 +1116,6 @@
   </div>
 
   <!-- Main Application Script (ES Module with cache-busting) -->
-  <script type="module" src="js/app.js?v=7"></script>
+  <script type="module" src="js/app.js?v=8"></script>
 </body>
 </html>
