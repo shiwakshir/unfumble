@@ -3,7 +3,7 @@
  * Enables 100% offline functionality, cache-first vendor scripts, and PWA installation.
  */
 
-const CACHE_NAME = 'unfumble-cache-v7';
+const CACHE_NAME = 'unfumble-cache-v8';
 
 const PRECACHE_ASSETS = [
   '/',
