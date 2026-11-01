@@ -59,6 +59,45 @@ export function parseLocally(prompt, existingWorkflow = null) {
     maxSizeKB = unit === 'mb' ? Math.round(val * 1024) : Math.round(val);
   }
 
+  // --- Target format extraction: JPG, PNG, WebP, PDF ---
+  let targetImageFormat = null;
+  if (p.includes('jpg') || p.includes('jpeg')) targetImageFormat = 'image/jpeg';
+  else if (p.includes('png') || p.includes('transparent') || p.includes('background')) targetImageFormat = 'image/png';
+  else if (p.includes('webp')) targetImageFormat = 'image/webp';
+
+  // --- Filename pattern extraction: Photo_1, Photo_2, Image_{n}, Application.pdf ---
+  let renamePattern = configurableFields.renamePattern || null;
+  let customFilename = null;
+
+  // Match e.g. "rename them Photo_1, Photo_2" or "Photo_1 through Photo_5"
+  const renameSeqMatch = prompt.match(/rename\s+(?:them|files)?\s*([a-zA-Z0-9_\-]+?)[_\-\s]*(?:1|01|\{n\})/i);
+  if (renameSeqMatch) {
+    const basePrefix = renameSeqMatch[1].replace(/[_\-\s]+$/, '');
+    renamePattern = `${basePrefix}_{n}`;
+  } else if (p.includes('rename')) {
+    const specificNameMatch = prompt.match(/rename\s+(?:it\s+)?(?:to\s+|as\s+)?['"]?([a-zA-Z0-9_\-\.]+)\.([a-zA-Z0-9]+)['"]?/i);
+    if (specificNameMatch) {
+      customFilename = `${specificNameMatch[1]}.${specificNameMatch[2]}`;
+    } else if (p.includes("today's date") || p.includes('date')) {
+      renamePattern = '{date}_{n}';
+    } else if (p.includes('number')) {
+      renamePattern = 'File_{n}';
+    }
+  }
+
+  // --- Resizing mode extraction: pad, white padding, fit, crop/fill ---
+  let resizeMode = 'pad'; // default to safe padding to avoid cropping
+  let padColor = '#FFFFFF';
+  if (p.includes('pad') || p.includes('padding') || p.includes('without crop') || p.includes("don't crop") || p.includes('no crop')) {
+    resizeMode = 'pad';
+    if (p.includes('black')) padColor = '#000000';
+    if (p.includes('transparent') || p.includes('remove background') || p.includes('cutout')) padColor = 'transparent';
+  } else if (p.includes('crop') || p.includes('fill')) {
+    resizeMode = 'fill';
+  } else if (p.includes('fit') || p.includes('inside') || p.includes('maintain aspect')) {
+    resizeMode = 'fit';
+  }
+
   // --- Compression / File Size Intent Detection ---
   const isCompressRequested = Boolean(
     maxSizeKB !== null ||
@@ -103,45 +142,6 @@ export function parseLocally(prompt, existingWorkflow = null) {
   if (!isResizeRequested && !isCompressRequested && !targetImageFormat && !renamePattern) {
     // Default fallback when prompt is just generic "process image"
     isResizeRequested = true;
-  }
-
-  // --- Resizing mode extraction: pad, white padding, fit, crop/fill ---
-  let resizeMode = 'pad'; // default to safe padding to avoid cropping
-  let padColor = '#FFFFFF';
-  if (p.includes('pad') || p.includes('padding') || p.includes('without crop') || p.includes("don't crop") || p.includes('no crop')) {
-    resizeMode = 'pad';
-    if (p.includes('black')) padColor = '#000000';
-    if (p.includes('transparent')) padColor = 'transparent';
-  } else if (p.includes('crop') || p.includes('fill')) {
-    resizeMode = 'fill';
-  } else if (p.includes('fit') || p.includes('inside') || p.includes('maintain aspect')) {
-    resizeMode = 'fit';
-  }
-
-  // --- Target format extraction: JPG, PNG, WebP, PDF ---
-  let targetImageFormat = null;
-  if (p.includes('jpg') || p.includes('jpeg')) targetImageFormat = 'image/jpeg';
-  else if (p.includes('png')) targetImageFormat = 'image/png';
-  else if (p.includes('webp')) targetImageFormat = 'image/webp';
-
-  // --- Filename pattern extraction: Photo_1, Photo_2, Image_{n}, Application.pdf ---
-  let renamePattern = configurableFields.renamePattern || null;
-  let customFilename = null;
-
-  // Match e.g. "rename them Photo_1, Photo_2" or "Photo_1 through Photo_5"
-  const renameSeqMatch = prompt.match(/rename\s+(?:them|files)?\s*([a-zA-Z0-9_\-]+?)[_\-\s]*(?:1|01|\{n\})/i);
-  if (renameSeqMatch) {
-    const basePrefix = renameSeqMatch[1].replace(/[_\-\s]+$/, '');
-    renamePattern = `${basePrefix}_{n}`;
-  } else if (p.includes('rename')) {
-    const specificNameMatch = prompt.match(/rename\s+(?:it\s+)?(?:to\s+|as\s+)?['"]?([a-zA-Z0-9_\-\.]+)\.([a-zA-Z0-9]+)['"]?/i);
-    if (specificNameMatch) {
-      customFilename = `${specificNameMatch[1]}.${specificNameMatch[2]}`;
-    } else if (p.includes("today's date") || p.includes('date')) {
-      renamePattern = '{date}_{n}';
-    } else if (p.includes('number')) {
-      renamePattern = 'File_{n}';
-    }
   }
 
   // --- Determine Tool Categories & Operations ---

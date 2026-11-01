@@ -374,6 +374,11 @@ async function runAllTests() {
     assert(tinyKbWorkflow.operations.some(op => op.operationId === 'compress_image'), 'make it 1kb parsed as compression');
     assert(!tinyKbWorkflow.operations.some(op => op.operationId === 'resize_image'), 'make it 1kb does NOT force resize');
     assert(tinyKbWorkflow.configurableFields.maxSizeKB === 1, `maxSizeKB parsed as 1, got ${tinyKbWorkflow.configurableFields.maxSizeKB}`);
+
+    const bgPrompt = 'remove background from photo';
+    const bgWorkflow = parseLocally(bgPrompt);
+    assert(bgWorkflow && bgWorkflow.operations.length > 0, 'Parses "remove background from photo" without ReferenceError');
+    assert(bgWorkflow.configurableFields.format === 'image/png', 'Background removal targets transparent PNG format');
   } catch (err) {
     assert(false, `Disambiguation test threw error: ${err.message}`);
   }
