@@ -1,5 +1,5 @@
 /**
- * FileFix Automated Test Suite
+ * Unfumble Automated Test Suite
  * Verifies all Phase 1 core operations, workflow engine, Smart Fix, and security safeguards.
  */
 
@@ -74,7 +74,7 @@ async function createSyntheticPng(width = 400, height = 300, color = { r: 100, g
 
 async function runAllTests() {
   console.log(`\n======================================================`);
-  console.log(`  FileFix Automated Test Suite`);
+  console.log(`  Unfumble Automated Test Suite`);
   console.log(`======================================================\n`);
 
   // --- TEST 1: Merge three PDFs preserving page order ---
@@ -236,7 +236,7 @@ async function runAllTests() {
   try {
     const items = [
       { name: 'test1.txt', data: 'Hello World' },
-      { name: 'test2.txt', data: 'FileFix Package' }
+      { name: 'test2.txt', data: 'Unfumble Package' }
     ];
     const zipBuffer = await fileOps.createZip(items, 'Test.zip');
     const zip = await JSZip.loadAsync(zipBuffer);

@@ -1,9 +1,9 @@
 @echo off
-title FileFix - Your files. Your tools. Your way.
+title Unfumble — Your files. Your tools. Unfumbled.
 cd /d "%~dp0"
 
 echo ===================================================
-echo   FileFix - AI File Toolkit & Custom Tool Creator
+echo   Unfumble - 100% Private File Toolkit
 echo   Starting server at http://localhost:3000 ...
 echo ===================================================
 

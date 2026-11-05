@@ -1,20 +1,24 @@
-# FileFix
+# Unfumble
 
-> **Your files. Your tools. Your way.**
+> **Your files. Your tools. Unfumbled.**
 
-FileFix is a production-oriented, privacy-first web application and AI-powered custom tool creator. It unifies essential PDF, image, tabular, and file conversion utilities while introducing two transformative capabilities: **Smart Fix** (intelligent diagnosis and 1-click repair of website file rejection errors) and **Build My Tool** (an AI custom tool creator that interprets natural-language requests, synthesizes typed workflow pipelines, and dynamically generates working interactive user interfaces).
+Unfumble is a production-oriented, 100% private web application and natural-language custom tool builder. All file processing runs directly on your device—your files and sensitive documents are never uploaded to any remote server or third-party cloud.
+
+Unfumble unifies essential PDF, image, tabular, and file conversion utilities while introducing two transformative capabilities:
+1. **Build My Tool:** An intelligent custom tool creator that interprets natural-language requests (*"I have 15 images. Convert them all to JPG, resize to 600x800 with white padding, make each smaller than 200 KB, and rename them Photo_1, Photo_2..."*), synthesizes typed workflow pipelines, and dynamically generates a working interface with live sliders and batch download.
+2. **Smart Fix:** Intelligent diagnosis and 1-click automatic repair for website file rejection errors (government portals, visa uploads, job application ATS systems).
 
 ---
 
 ## 🌟 The Three Product Pillars
 
-### 1. Build My Tool (Flagship AI Custom Tool Builder)
+### 1. Build My Tool (Flagship Custom Tool Builder)
 - **Natural-Language Understanding:** Describe any complex multi-step file operation in ordinary English.
   - *Example:* *"I have 15 images. Convert them all to JPG, resize them to 600 by 800 pixels with white padding, make each file smaller than 200 KB and rename them Photo_1, Photo_2, Photo_3."*
 - **Dynamic Interface Generation:** Automatically renders a custom working application with tailored sliders, number inputs, format dropdowns, file dropzones, real-time pipeline step chips, and progress feedback.
 - **Conversational Refinement:** Refine the tool iteratively (*"Actually, make max size 150 KB and add black padding instead"*) without losing uploaded files.
-- **My Tools:** Save workflows to browser local storage, duplicate, edit, export to JSON, or import from JSON.
-- **Pre-Built Templates:** Six ready-to-run templates including *Resize & Rename 100 Photos*, *Merge & Compress PDFs*, *Receipts to A4 PDF*, and *Visa / Passport Photo Maker*.
+- **My Tools:** Save workflows to browser storage, duplicate, edit, export to JSON, or import from JSON.
+- **Pre-Built Templates:** Ready-to-run templates including *Resize & Rename 100 Photos*, *Merge & Compress PDFs*, *Reduce File Size (KB)*, *Receipts to A4 PDF*, and *Visa / Passport Photo Maker*.
 
 ### 2. Smart Fix (Intelligent File Rejection Repair)
 - **"File rejected? Let's find out why."**
@@ -33,7 +37,7 @@ FileFix is a production-oriented, privacy-first web application and AI-powered c
   - Compress PDF streams and optimize internal structure.
 - **Image Toolkit:**
   - Resizing with 3 distinct strategies: **Pad** (add neutral background space without cropping), **Fit** (scale inside boundary), and **Fill** (crop to fill).
-  - Iterative binary-search compression targeting exact maximum file size in KB.
+  - Iterative binary-search compression targeting exact maximum file size down to 1 KB.
   - Format conversions (JPG, PNG, WebP).
   - Batch processing with individual and ZIP package downloads.
 - **Universal Converter:**
@@ -47,22 +51,22 @@ FileFix is a production-oriented, privacy-first web application and AI-powered c
 
 ---
 
-## 🔒 Privacy-First Architecture
+## 🔒 100% Private Architecture (Files Never Leave Your Device)
 
-FileFix was engineered around uncompromising user privacy:
-- **100% Client-Side Processing:** All PDF operations (`pdf-lib`), image manipulations (`HTML5 Canvas` / `OffscreenCanvas`), hashing (`Web Crypto API`), and ZIP packaging (`JSZip`) execute inside the user's browser.
-- **Zero Document Retention:** Sensitive documents (passports, financial statements, medical records) are never transmitted to external servers or third-party AI models.
-- **Dual AI Engine:** Operates completely offline with its local deterministic semantic parser. Users can optionally supply a Gemini API key in settings for live LLM reasoning without sending document contents over the wire.
+Unfumble was engineered around uncompromising user privacy:
+- **Processed Privately on Your Device:** All PDF operations (`pdf-lib`), image manipulations (`HTML5 Canvas` / `OffscreenCanvas`), hashing (`Web Crypto API`), and ZIP packaging (`JSZip`) execute inside your browser on your computer or mobile phone.
+- **Zero Document Retention:** Sensitive documents (passports, financial statements, IDs, photos) are never transmitted to any external server or third-party AI cloud.
+- **Dual Engine:** Operates 100% offline with its local deterministic semantic parser. Users can optionally supply a Gemini API key in settings for live LLM reasoning without sending document contents over the wire.
 
 ---
 
 ## 📁 Project Structure
 
 ```
-filefix/
+unfumble/
 ├── public/
 │   ├── css/
-│   │   └── styles.css              # Custom responsive stylesheet & utility classes
+│   │   └── styles.css              # Custom responsive stylesheet & executive design system
 │   ├── js/
 │   │   ├── app.js                  # Main UI controller & view orchestration
 │   │   ├── operations/
@@ -74,23 +78,27 @@ filefix/
 │   │   ├── workflow/
 │   │   │   ├── engine.js           # Multi-step pipeline execution engine
 │   │   │   ├── nlp-parser.js       # Natural language parser & Gemini integration
-│   │   │   └── templates.js        # Pre-built workflow specifications
+│   │   │   ├── templates.js        # Pre-built workflow specifications
+│   │   │   └── share.js            # URL-safe state serialization & deep links
 │   │   ├── smartfix/
 │   │   │   └── smartfix.js         # Rejection diagnosis & automated repair
 │   │   └── ui/
 │   │       └── dynamic-tool.js     # Dynamic interface renderer for custom workflows
-│   ├── vendor/                     # Vendored client-side libraries
+│   ├── vendor/                     # Vendored libraries
 │   │   ├── pdf-lib.min.js
 │   │   ├── jszip.min.js
 │   │   └── lucide.min.js
+│   ├── manifest.webmanifest        # PWA configuration
+│   ├── sw.js                       # Offline Service Worker
 │   └── index.html                  # Single-page application entry point
 ├── server/
 │   └── server.mjs                  # Native Node.js HTTP server
 ├── tests/
-│   └── test-runner.mjs             # 43 automated end-to-end tests
+│   └── test-runner.mjs             # Automated end-to-end tests
 ├── package.json
 ├── start.bat                       # Windows one-click launcher
 ├── start-server.ps1                # PowerShell launcher
+├── wrangler.jsonc                  # Cloudflare Workers configuration
 └── README.md
 ```
 
@@ -102,7 +110,7 @@ filefix/
 - Node.js (v18+)
 
 ### Quick Start
-To launch FileFix locally, simply run:
+To launch Unfumble locally:
 
 **On Windows:**
 Double-click `start.bat` or run in PowerShell:
@@ -122,27 +130,30 @@ http://localhost:3000
 
 ---
 
-## 🌐 Public Production & Cloud Deployment
+## 🌐 Cloud & Edge Deployment
 
-FileFix is engineered for zero-maintenance edge and cloud deployment:
+Unfumble is engineered for zero-maintenance edge deployment:
 
-### 1. Vercel
-FileFix includes a pre-configured [`vercel.json`](file:///C:/Users/HP/.gemini/antigravity/scratch/filefix/vercel.json) with security headers (CSP, nosniff, DENY framing) and 1-year immutable caching for vendored WebAssembly binaries:
+### 1. Cloudflare Workers / Static Assets
+Configured with [`wrangler.jsonc`](wrangler.jsonc) serving the `./public` directory with zero backend compute charges:
+```bash
+npx wrangler deploy
+```
+
+### 2. Vercel
+Includes a pre-configured [`vercel.json`](vercel.json) with security headers (CSP, nosniff, DENY framing):
 ```bash
 vercel deploy --prod
 ```
 
-### 2. Netlify
-[`netlify.toml`](file:///C:/Users/HP/.gemini/antigravity/scratch/filefix/netlify.toml) points to `public` with instant CDN asset routing:
+### 3. Netlify
+[`netlify.toml`](netlify.toml) points to `public` with instant CDN asset routing:
 ```bash
 netlify deploy --prod
 ```
 
-### 3. Cloudflare Pages
-[`public/_headers`](file:///C:/Users/HP/.gemini/antigravity/scratch/filefix/public/_headers) configures Cloudflare edge cache rules and security policies out of the box.
-
 ### 4. Docker & Container Hosting
-FileFix includes a lightweight Node 22 Alpine [`Dockerfile`](file:///C:/Users/HP/.gemini/antigravity/scratch/filefix/Dockerfile) and [`docker-compose.yml`](file:///C:/Users/HP/.gemini/antigravity/scratch/filefix/docker-compose.yml):
+Includes a lightweight Node 22 Alpine [`Dockerfile`](Dockerfile) and [`docker-compose.yml`](docker-compose.yml):
 ```bash
 docker compose up -d --build
 ```
@@ -153,111 +164,28 @@ docker compose up -d --build
 
 Every custom tool generated by "Build My Tool" can be shared instantly without requiring a database or cloud account:
 - Click **"Share Tool Link"** in any generated tool interface.
-- FileFix compresses the entire pipeline schema into a URL-safe hash (e.g. `https://filefix.app/#tool=...`).
-- When another user opens the URL, FileFix restores the custom tool, configures all parameters, and displays the ready-to-run tool immediately.
+- Unfumble compresses the entire pipeline schema into a URL-safe hash (e.g. `https://unfumble.shiwakshi.workers.dev/#tool=...`).
+- When another user opens the URL, Unfumble restores the custom tool, configures all parameters, and displays the ready-to-run tool immediately.
 
 ---
 
 ## 📱 Progressive Web App (PWA) & Offline Mode
 
-FileFix is a fully compliant Progressive Web App:
-- **Instant Offline Installation:** Click **"Install App"** in the top navigation bar to install FileFix as a native desktop or mobile application on macOS, Windows, Linux, iOS, and Android.
-- **Service Worker ([`sw.js`](file:///C:/Users/HP/.gemini/antigravity/scratch/filefix/public/sw.js)):** Uses cache-first strategies for PDF-Lib, JSZip, and app scripts so the toolkit works seamlessly even without an internet connection.
-- **Web App Manifest ([`manifest.webmanifest`](file:///C:/Users/HP/.gemini/antigravity/scratch/filefix/public/manifest.webmanifest)):** High-resolution 192x192 and 512x512 icons, teal theme branding, and desktop app shortcuts.
+Unfumble is a fully compliant Progressive Web App:
+- **Instant Offline Installation:** Click **"Install App"** in the top navigation bar to install Unfumble as a native desktop or mobile application on macOS, Windows, Linux, iOS, and Android.
+- **Service Worker ([`sw.js`](public/sw.js)):** Uses cache strategies for PDF-Lib, JSZip, and app scripts so the toolkit works seamlessly even without an internet connection.
+- **Web App Manifest ([`manifest.webmanifest`](public/manifest.webmanifest)):** High-resolution icons, teal theme branding, and desktop app shortcuts.
 
 ---
 
 ## 🧪 Automated Testing
 
-FileFix includes a comprehensive automated test suite verifying all 16 requirements specified in Part 14 of the Master Build Prompt:
+Unfumble includes an automated test suite verifying all core operations:
 
 To run the automated tests:
 ```powershell
-$env:NODE_PATH = "C:\Users\HP\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules"
 node tests/test-runner.mjs
 ```
-
-### Test Suite Results:
-```
-======================================================
-  FileFix Automated Test Suite
-======================================================
-
-[Suite 1] PDF Operations:
-  ✓ PASS: Merged PDF has exactly 6 pages (2+1+3), got 6
-  ✓ PASS: Split range produced result
-  ✓ PASS: Split extracted exactly 3 pages (1-2, 4), got 3
-  ✓ PASS: Split 'all' produced 5 individual files, got 5
-  ✓ PASS: Page 2 deleted, 3 pages remain, got 3
-  ✓ PASS: Page 1 rotated by 90 degrees, got 90
-
-[Suite 2] Image Operations:
-  ✓ PASS: Padded image dimensions match 600×800 exactly, got 600×800
-  ✓ PASS: Fitted image fits inside boundary, got 600×300
-  ✓ PASS: Filled image cropped to exactly 500×500, got 500×500
-  ✓ PASS: Image compressed below 100 KB target, got 7.2 KB
-  ✓ PASS: Converted image is genuine JPEG format, got jpeg
-  ✓ PASS: Images converted into 2-page PDF, got 2
-
-[Suite 3] Batch & Utility Operations:
-  ✓ PASS: First file renamed to Photo_1.jpg, got Photo_1.jpg
-  ✓ PASS: Second file renamed to Photo_2.jpg, got Photo_2.jpg
-  ✓ PASS: Third file renamed to Photo_3.jpg, got Photo_3.jpg
-  ✓ PASS: Duplicate names resolved without collision
-  ✓ PASS: ZIP contains all packaged files
-  ✓ PASS: Detected exactly 1 duplicate group, got 1
-  ✓ PASS: Duplicate group contains 2 matching files
-  ✓ PASS: CSV parsed into JSON correctly
-  ✓ PASS: JSON converted back to CSV
-
-[Suite 4] Smart Fix & AI Custom Builder:
-  ✓ PASS: Initial file correctly diagnosed as failing portal requirements
-  ✓ PASS: Suggested fixes generated: convert_format, resize
-  ✓ PASS: Repaired file achieves 100% compliance with requirements
-  ✓ PASS: Repaired dimensions exactly 600×600 px
-  ✓ PASS: Workflow title: "Custom Image Processor"
-  ✓ PASS: Workflow assembled 4 pipeline operations, got 4
-  ✓ PASS: Operation 1: resize_image with mode "pad"
-  ✓ PASS: Operation 2: convert_image to JPG
-  ✓ PASS: Operation 3: compress_image
-  ✓ PASS: Operation 4: rename_file with pattern Image_{n}
-  ✓ PASS: Workflow produced 5 output files, got 5
-  ✓ PASS: First output renamed to Image_1.jpg, got Image_1.jpg
-  ✓ PASS: Fifth output renamed to Image_5.jpg, got Image_5.jpg
-  ✓ PASS: Output image has exact 600×800 padded dimensions, got 600×800
-  ✓ PASS: Output format is genuine JPEG
-  ✓ PASS: PDF workflow includes merge_pdf
-  ✓ PASS: PDF workflow includes delete_pdf_pages
-  ✓ PASS: PDF workflow includes rotate_pdf
-  ✓ PASS: Merged result produced single output
-  ✓ PASS: Output PDF has 5 pages after deleting page 3 (6 - 1 = 5), got 5
-
-[Suite 5] Security & Safeguards:
-  ✓ PASS: Corrupted file safely rejected with clear exception
-  ✓ PASS: Safeguard prevents deleting all pages from a document
-
-[Suite 6] Public Deployment & Deep Linking:
-  ✓ PASS: Workflow encoded to URL-safe hash string
-  ✓ PASS: Decoded workflow preserved title: "Passport Photo 600x600 Maker"
-  ✓ PASS: Decoded operations matched original
-  ✓ PASS: Decoded parameters preserved
-
-======================================================
-  Test Results Summary:
-  Total Tests:  47
-  Passed Tests: 47
-  Failed Tests: 0
-======================================================
-```
-
----
-
-## ⚙️ Environment Configuration
-
-| Variable | Description | Default |
-|---|---|---|
-| `PORT` | Local server port | `3000` |
-| `GEMINI_API_KEY` | Optional API key for live conversational AI tool generation | `None (uses local NLP planner)` |
 
 ---
 
@@ -270,4 +198,4 @@ node tests/test-runner.mjs
 - [x] **Image Toolkit:** Fit, fill, and pad resizing, background color fill, target size binary-search compression, JPG/PNG/WebP conversions, batch processor.
 - [x] **File Converter:** Tabular CSV &harr; JSON &harr; TSV, Image to Image, Image to PDF.
 - [x] **Batch Utilities:** Filename Fixer with collision prevention, Duplicate Finder with SHA-256 hashes, Deep File Inspector.
-- [x] **Privacy & Security:** 100% client-side privacy, input sanitization, error boundaries.
+- [x] **Privacy & Security:** 100% Private (files never leave your device), input sanitization, error boundaries.

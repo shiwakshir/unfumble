@@ -1,5 +1,5 @@
 /**
- * FileFix Image Operations Module
+ * Unfumble Image Operations Module
  * Dual-environment architecture:
  * - Uses native HTML5 Canvas / OffscreenCanvas in the browser (100% client-side privacy)
  * - Uses Sharp in Node.js (for backend API & automated test suite)

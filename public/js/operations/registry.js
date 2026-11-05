@@ -1,5 +1,5 @@
 /**
- * FileFix Operations Registry
+ * Unfumble Operations Registry
  * Structured, typed definitions of all supported file processing operations.
  */
 

@@ -1,5 +1,5 @@
 /**
- * FileFix Smart Fix Module
+ * Unfumble Smart Fix Module
  * Intelligent file rejection diagnostic & automatic repair engine.
  */
 

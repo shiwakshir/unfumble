@@ -1,7 +1,7 @@
 services:
-  filefix:
+  unfumble:
     build: .
-    container_name: filefix-app
+    container_name: unfumble-app
     restart: unless-stopped
     ports:
       - "3000:3000"

@@ -1,7 +1,7 @@
 {
-  "name": "filefix",
+  "name": "unfumble",
   "version": "1.0.0",
-  "description": "Your files. Your tools. Your way. AI-powered file toolkit and custom tool creator.",
+  "description": "Unfumble — Your files. Your tools. Unfumbled. 100% private file utilities and custom tool builder. Files never leave your device.",
   "type": "module",
   "main": "server/server.mjs",
   "scripts": {
@@ -16,9 +16,10 @@
     "smart-fix",
     "ai-workflow",
     "custom-tools",
-    "privacy-first"
+    "privacy-first",
+    "unfumble"
   ],
-  "author": "FileFix Team",
+  "author": "Unfumble Team",
   "license": "MIT",
   "dependencies": {
     "jszip": "^3.10.1",

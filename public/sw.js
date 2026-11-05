@@ -1,9 +1,9 @@
 /**
- * FileFix Service Worker (v1.0.0)
+ * Unfumble Service Worker (v1.0.0)
  * Enables 100% offline functionality, cache-first vendor scripts, and PWA installation.
  */
 
-const CACHE_NAME = 'unfumble-cache-v8';
+const CACHE_NAME = 'unfumble-cache-v9';
 
 const PRECACHE_ASSETS = [
   '/',

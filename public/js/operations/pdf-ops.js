@@ -1,5 +1,5 @@
 /**
- * FileFix PDF Operations Module
+ * Unfumble PDF Operations Module
  * Pure client-side & server-compatible PDF manipulation powered by PDF-Lib.
  */
 

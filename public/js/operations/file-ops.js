@@ -1,5 +1,5 @@
 /**
- * FileFix File & Batch Operations Module
+ * Unfumble File & Batch Operations Module
  * Renaming, duplicate detection (SHA-256), ZIP packaging, and file inspection.
  */
 

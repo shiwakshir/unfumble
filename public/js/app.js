@@ -1,5 +1,5 @@
 /**
- * FileFix Main Application Controller
+ * Unfumble Main Application Controller
  * Wires together UI components, workflow engine, Smart Fix, and file operations.
  */
 
@@ -21,7 +21,7 @@ const state = {
   currentWorkflow: null,
   activeRenderer: null,
   savedWorkflows: [],
-  geminiApiKey: localStorage.getItem('filefix_gemini_key') || '',
+  geminiApiKey: localStorage.getItem('unfumble_gemini_key') || '',
   supportUrl: 'https://ko-fi.com/shiwakshi',
   smartFixFile: null,
   smartFixDiagnosis: null,
@@ -70,7 +70,7 @@ function initPwa() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js').then(reg => {
-        console.log('FileFix Service Worker registered:', reg.scope);
+        console.log('Unfumble Service Worker registered:', reg.scope);
       }).catch(err => {
         console.warn('Service Worker registration skipped (running without SW):', err);
       });
@@ -100,7 +100,7 @@ function initPwa() {
 
   window.addEventListener('appinstalled', () => {
     if (btnInstall) btnInstall.classList.add('hidden');
-    console.log('FileFix app installed successfully');
+    console.log('Unfumble app installed successfully');
   });
 }
 
@@ -1927,7 +1927,7 @@ function initMyToolsView() {
 
 function loadSavedWorkflows() {
   try {
-    const raw = localStorage.getItem('filefix_saved_workflows');
+    const raw = localStorage.getItem('unfumble_saved_workflows');
     state.savedWorkflows = raw ? JSON.parse(raw) : [];
   } catch (e) {
     state.savedWorkflows = [];
@@ -1941,7 +1941,7 @@ function saveWorkflowToStorage(workflow) {
   } else {
     state.savedWorkflows.unshift(workflow);
   }
-  localStorage.setItem('filefix_saved_workflows', JSON.stringify(state.savedWorkflows));
+  localStorage.setItem('unfumble_saved_workflows', JSON.stringify(state.savedWorkflows));
   renderMyToolsGrid();
   alert(`Workflow "${workflow.title}" saved to My Tools!`);
 }
@@ -1987,7 +1987,7 @@ function renderMyToolsGrid() {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.getAttribute('data-delete-saved'), 10);
       state.savedWorkflows.splice(idx, 1);
-      localStorage.setItem('filefix_saved_workflows', JSON.stringify(state.savedWorkflows));
+      localStorage.setItem('unfumble_saved_workflows', JSON.stringify(state.savedWorkflows));
       renderMyToolsGrid();
     });
   });
@@ -2032,12 +2032,12 @@ function initSettingsModal() {
     btnSave.addEventListener('click', () => {
       if (inputKey) {
         state.geminiApiKey = inputKey.value.trim();
-        localStorage.setItem('filefix_gemini_key', state.geminiApiKey);
+        localStorage.setItem('unfumble_gemini_key', state.geminiApiKey);
       }
       if (inputSupportUrl) {
         const urlVal = inputSupportUrl.value.trim() || 'https://buymeacoffee.com';
         state.supportUrl = urlVal;
-        localStorage.setItem('filefix_support_url', state.supportUrl);
+        localStorage.setItem('unfumble_support_url', state.supportUrl);
         updateSupportLinks();
       }
       modal.classList.remove('active');
@@ -2049,7 +2049,7 @@ function initSettingsModal() {
     btnClear.addEventListener('click', () => {
       if (confirm('Are you sure you want to delete all saved workflows?')) {
         state.savedWorkflows = [];
-        localStorage.removeItem('filefix_saved_workflows');
+        localStorage.removeItem('unfumble_saved_workflows');
         renderMyToolsGrid();
         modal.classList.remove('active');
       }
@@ -2060,7 +2060,7 @@ function initSettingsModal() {
 function updateSupportLinks() {
   const KOFI = 'https://ko-fi.com/shiwakshi';
   try {
-    localStorage.removeItem('filefix_support_url');
+    localStorage.removeItem('unfumble_support_url');
   } catch (e) {}
 
   const headerBtn = document.getElementById('btn-support-creator');

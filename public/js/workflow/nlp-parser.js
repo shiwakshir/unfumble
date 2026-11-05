@@ -1,5 +1,5 @@
 /**
- * FileFix Natural Language Workflow Parser & AI Systems Architect
+ * Unfumble Natural Language Workflow Parser & AI Systems Architect
  * Dual Engine:
  * 1. Semantic Deterministic NLP Engine (Works 100% offline with zero API key)
  * 2. Gemini Live API Integration (When user provides an API key in settings)
@@ -365,10 +365,10 @@ export function parseLocally(prompt, existingWorkflow = null) {
  * Live Gemini API Integration for Advanced Tool Generation
  */
 async function generateWorkflowWithGemini(prompt, existingWorkflow, apiKey) {
-  const systemPrompt = `You are the FileFix AI Architecture Engine.
+  const systemPrompt = `You are the Unfumble AI Architecture Engine.
 Your task is to convert the user's natural language request into a valid JSON workflow specification based on available operations.
 
-Available operations in FileFix registry:
+Available operations in Unfumble registry:
 - resize_image: params { width: number, height: number, mode: 'pad'|'fit'|'fill', padColor: string }
 - convert_image: params { format: 'image/jpeg'|'image/png'|'image/webp', quality: number }
 - compress_image: params { maxSizeKB: number, mode: 'target_size' }

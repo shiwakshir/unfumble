@@ -7,12 +7,12 @@ let html = fs.readFileSync(htmlPath, 'utf8');
 // 1. Remove v1.0 Pro badge
 html = html.replace(
   `<div class="flex items-center gap-2">
-            <span class="text-lg font-bold text-slate-900 tracking-tight">FileFix</span>
+            <span class="text-lg font-bold text-slate-900 tracking-tight">Unfumble</span>
             <span class="badge badge-teal">v1.0 Pro</span>
           </div>
           <p class="text-[11px] text-slate-500 hidden sm:block">Your files. Your tools. Your way.</p>`,
   `<div class="flex items-center gap-2">
-            <span class="text-lg font-bold text-slate-900 tracking-tight">FileFix</span>
+            <span class="text-lg font-bold text-slate-900 tracking-tight">Unfumble</span>
           </div>
           <p class="text-[11px] text-slate-400 hidden sm:block">File tools & custom workflows</p>`
 );
@@ -47,7 +47,7 @@ html = html.replace(
 );
 
 html = html.replace(
-  `Describe what you need in plain English, and FileFix will build a custom working tool. Or pick from ready-made PDF, image, and conversion utilities.`,
+  `Describe what you need in plain English, and Unfumble will build a custom working tool. Or pick from ready-made PDF, image, and conversion utilities.`,
   `Convert, compress, resize, merge, or describe a multi-step workflow in plain English.`
 );
 
@@ -153,11 +153,11 @@ html = html.replace(
   `<span class="badge badge-teal mb-2">Flagship Feature</span>
           <h1 class="text-3xl font-bold text-slate-900">Build My Tool</h1>
           <p class="text-sm text-slate-500 mt-1 max-w-xl mx-auto">
-            Describe the file processing task you want to solve in plain English. FileFix interprets the workflow, verifies operation safety, and generates a working interactive tool for you.
+            Describe the file processing task you want to solve in plain English. Unfumble interprets the workflow, verifies operation safety, and generates a working interactive tool for you.
           </p>`,
   `<h1 class="text-3xl font-bold text-slate-900">Custom Tool Builder</h1>
           <p class="text-sm text-slate-500 mt-1 max-w-xl mx-auto">
-            Describe your file workflow in plain English. FileFix generates a working interface with live controls, progress tracking, and batch download.
+            Describe your file workflow in plain English. Unfumble generates a working interface with live controls, progress tracking, and batch download.
           </p>`
 );
 

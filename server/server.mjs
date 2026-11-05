@@ -1,5 +1,5 @@
 /**
- * FileFix Local & Production Server
+ * Unfumble Local & Production Server
  * Native Node.js HTTP server for static assets and optional backend processing.
  */
 
@@ -55,7 +55,7 @@ const server = http.createServer(async (req, res) => {
   // Health endpoint
   if (pathname === '/api/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', name: 'FileFix', version: '1.0.0', time: new Date().toISOString() }));
+    res.end(JSON.stringify({ status: 'ok', name: 'Unfumble', version: '1.0.0', time: new Date().toISOString() }));
     return;
   }
 
@@ -94,8 +94,8 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, () => {
   console.log(`====================================================`);
-  console.log(`  FileFix Server running at http://localhost:${PORT}`);
-  console.log(`  Tagline: Your files. Your tools. Your way.`);
+  console.log(`  Unfumble Server running at http://localhost:${PORT}`);
+  console.log(`  Tagline: Your files. Your tools. Unfumbled.`);
   console.log(`  Public Directory: ${PUBLIC_DIR}`);
   console.log(`====================================================`);
 });

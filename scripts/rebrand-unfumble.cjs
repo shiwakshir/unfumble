@@ -9,11 +9,11 @@ let html = fs.readFileSync(htmlPath, 'utf8');
 
 // Title & Meta
 html = html.replace(/<title>.*?<\/title>/, '<title>Unfumble — Your files. Your tools. Unfumbled.</title>');
-html = html.replace(/content="FileFix - Your files\. Your tools\. Your way\./, 'content="Unfumble - Your files. Your tools. Unfumbled.');
+html = html.replace(/content="Unfumble - Your files\. Your tools\. Your way\./, 'content="Unfumble - Your files. Your tools. Unfumbled.');
 
 // Brand in header
 html = html.replace(
-  /<span class="text-lg font-bold text-slate-900 tracking-tight">FileFix<\/span>/g,
+  /<span class="text-lg font-bold text-slate-900 tracking-tight">Unfumble<\/span>/g,
   '<span class="text-lg font-bold text-slate-900 tracking-tight">Unfumble</span>'
 );
 
@@ -31,7 +31,7 @@ html = html.replace(
 
 // Footer Brand
 html = html.replace(
-  /<span class="font-bold text-slate-800 tracking-tight">FileFix<\/span>/g,
+  /<span class="font-bold text-slate-800 tracking-tight">Unfumble<\/span>/g,
   '<span class="font-bold text-slate-800 tracking-tight">Unfumble</span>'
 );
 html = html.replace(
@@ -40,13 +40,13 @@ html = html.replace(
 );
 
 // Prose references in index.html
-html = html.replace(/FileFix will inspect the format/g, 'Unfumble will inspect the format');
-html = html.replace(/FileFix generates a working interface/g, 'Unfumble generates a working interface');
-html = html.replace(/FileFix will convert, resize/g, 'Unfumble will convert, resize');
-html = html.replace(/Install FileFix/g, 'Install Unfumble');
-html = html.replace(/About FileFix/g, 'About Unfumble');
-html = html.replace(/FileFix works 100% offline/g, 'Unfumble works 100% offline');
-html = html.replace(/Keeps FileFix completely free/g, 'Keeps Unfumble completely free');
+html = html.replace(/Unfumble will inspect the format/g, 'Unfumble will inspect the format');
+html = html.replace(/Unfumble generates a working interface/g, 'Unfumble generates a working interface');
+html = html.replace(/Unfumble will convert, resize/g, 'Unfumble will convert, resize');
+html = html.replace(/Install Unfumble/g, 'Install Unfumble');
+html = html.replace(/About Unfumble/g, 'About Unfumble');
+html = html.replace(/Unfumble works 100% offline/g, 'Unfumble works 100% offline');
+html = html.replace(/Keeps Unfumble completely free/g, 'Keeps Unfumble completely free');
 
 fs.writeFileSync(htmlPath, html, 'utf8');
 console.log('Successfully rebranded public/index.html to Unfumble');
@@ -63,7 +63,7 @@ const oldUpdateSupport = /function updateSupportLinks\(\) \{[\s\S]*?\}/;
 const newUpdateSupport = `function updateSupportLinks() {
   const KOFI = '${KOFI_URL}';
   try {
-    localStorage.removeItem('filefix_support_url');
+    localStorage.removeItem('Unfumble_support_url');
   } catch (e) {}
 
   const headerBtn = document.getElementById('btn-support-creator');
@@ -87,14 +87,14 @@ console.log('Successfully updated public/js/app.js with bulletproof Ko-fi handle
 // 3. UPDATE manifest.webmanifest
 const manifestPath = path.join(__dirname, '..', 'public', 'manifest.webmanifest');
 let manifest = fs.readFileSync(manifestPath, 'utf8');
-manifest = manifest.replace(/"name": "FileFix — Your files\. Your tools\. Your way\."/, '"name": "Unfumble — Your files. Your tools. Unfumbled."');
-manifest = manifest.replace(/"short_name": "FileFix"/, '"short_name": "Unfumble"');
+manifest = manifest.replace(/"name": "Unfumble — Your files\. Your tools\. Your way\."/, '"name": "Unfumble — Your files. Your tools. Unfumbled."');
+manifest = manifest.replace(/"short_name": "Unfumble"/, '"short_name": "Unfumble"');
 fs.writeFileSync(manifestPath, manifest, 'utf8');
 console.log('Successfully updated manifest.webmanifest to Unfumble');
 
 // 4. UPDATE sw.js (Bump cache to v3)
 const swPath = path.join(__dirname, '..', 'public', 'sw.js');
 let sw = fs.readFileSync(swPath, 'utf8');
-sw = sw.replace(/const CACHE_NAME = 'filefix-cache-v\d+';/g, "const CACHE_NAME = 'unfumble-cache-v3';");
+sw = sw.replace(/const CACHE_NAME = 'Unfumble-cache-v\d+';/g, "const CACHE_NAME = 'unfumble-cache-v3';");
 fs.writeFileSync(swPath, sw, 'utf8');
 console.log('Successfully bumped cache in sw.js to unfumble-cache-v3');

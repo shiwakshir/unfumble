@@ -1,5 +1,5 @@
 /**
- * FileFix Dynamic Tool Interface Generator
+ * Unfumble Dynamic Tool Interface Generator
  * Automatically renders a complete interactive tool UI from a workflow specification.
  */
 
